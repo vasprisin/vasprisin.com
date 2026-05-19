@@ -1,0 +1,290 @@
+/* ============================================================
+   VASPRISIN DESIGN SYSTEM
+   Foundational tokens — colors, type, spacing, motion
+   Personal brand of Priyanshu (VP) Singh — vasprisin.com
+   ============================================================ */
+
+/* ------------------------------------------------------------
+   FONTS
+   - Display: Instrument Serif  (editorial, italic-forward)
+   - Sans:    Geist             (neutral grotesque, modern)
+   - Mono:    Geist Mono        (numerics, credentials, code)
+   Loaded via Google Fonts in each consuming HTML file.
+   ------------------------------------------------------------ */
+
+:root {
+  /* -------- TYPE FAMILIES -------- */
+  --font-display: "Instrument Serif", "Newsreader", "Source Serif 4", Georgia, serif;
+  --font-sans:    "Geist", "Söhne", "Helvetica Neue", Arial, sans-serif;
+  --font-mono:    "Geist Mono", "JetBrains Mono", "Menlo", ui-monospace, monospace;
+
+  /* -------- COLOR PRIMITIVES -------- */
+  /* Warm paper palette — the foundation. Everything sits on cream. */
+  --paper-50:  #FBF9F4;   /* near-white, sub-panels         */
+  --paper-100: #F5F1E8;   /* DEFAULT page background        */
+  --paper-200: #ECE6D7;   /* hover surface, divider blocks  */
+  --paper-300: #DDD4BF;   /* heavier rules, chips           */
+
+  /* Ink — warm near-black, never pure #000 */
+  --ink-900: #14110E;     /* primary text, display          */
+  --ink-700: #3A332A;     /* secondary text                 */
+  --ink-500: #6B6358;     /* muted text, captions           */
+  --ink-300: #A29A8C;     /* placeholder, disabled          */
+  --ink-100: #C9C1B2;     /* very subtle text on cream      */
+
+  /* Borders & rules (hairline editorial style) */
+  --rule-strong: #14110E;     /* full ink rule              */
+  --rule-medium: #1F1B16;     /* slightly softer            */
+  --rule-soft:   #D6CFBE;     /* default hairline           */
+  --rule-faint:  #E8E1CF;     /* subtle separators          */
+
+  /* Accent — a single muted oxblood. Used sparingly. */
+  --accent-900: #5C1D1D;      /* hover / pressed            */
+  --accent-700: #7A2828;      /* DEFAULT accent             */
+  --accent-500: #A04444;      /* lighter, less common       */
+  --accent-100: #F0DDDD;      /* tinted background          */
+
+  /* Semantic accent companions */
+  --gold-700:   #8B6F2E;      /* awards, credentials        */
+  --ivy-700:    #2E4A36;      /* available / live           */
+
+  /* -------- SEMANTIC COLOR TOKENS -------- */
+  --bg:           var(--paper-100);
+  --bg-elevated:  var(--paper-50);
+  --bg-sunken:    var(--paper-200);
+  --bg-accent:    var(--accent-100);
+
+  --fg:           var(--ink-900);
+  --fg-muted:     var(--ink-500);
+  --fg-subtle:    var(--ink-300);
+  --fg-inverse:   var(--paper-50);
+  --fg-accent:    var(--accent-700);
+
+  --border:       var(--rule-soft);
+  --border-strong:var(--rule-strong);
+  --border-faint: var(--rule-faint);
+
+  /* -------- TYPE SCALE --------
+     Editorial. Big. Two scales — display (serif) and ui (sans).
+     Letter-spacing is tight on display, neutral on ui.       */
+
+  /* Display sizes (serif) — used for hero, section heads, pulls */
+  --t-display-1: clamp(64px, 10vw, 168px);   /* hero name      */
+  --t-display-2: clamp(48px, 6.5vw, 104px);  /* big statement  */
+  --t-display-3: clamp(36px, 4.5vw, 72px);   /* section open   */
+  --t-display-4: clamp(28px, 3vw, 48px);     /* sub-section    */
+
+  /* UI sizes (sans) — body, labels, captions */
+  --t-body-xl:   22px;   /* lede paragraph                     */
+  --t-body-lg:   18px;   /* default body                       */
+  --t-body:      16px;   /* compact body                       */
+  --t-body-sm:   14px;   /* metadata                           */
+  --t-caption:   12px;   /* labels, eyebrows                   */
+  --t-micro:     10.5px; /* footnotes, fineprint               */
+
+  /* -------- LINE-HEIGHTS -------- */
+  --lh-display: 0.96;       /* tight, editorial               */
+  --lh-tight:   1.12;
+  --lh-snug:    1.32;
+  --lh-body:    1.55;       /* default reading                */
+  --lh-loose:   1.72;
+
+  /* -------- LETTER-SPACING -------- */
+  --tr-display: -0.022em;   /* serif headlines                */
+  --tr-headline:-0.012em;
+  --tr-body:    -0.003em;
+  --tr-caption: 0.08em;     /* eyebrow labels (uppercase)     */
+  --tr-mono:    0;
+
+  /* -------- WEIGHTS -------- */
+  --w-regular:   400;
+  --w-medium:    500;
+  --w-semibold:  600;       /* sparing                        */
+  --w-bold:      700;       /* avoid — use italic instead     */
+
+  /* -------- SPACING SCALE (4-based) -------- */
+  --s-1:   4px;
+  --s-2:   8px;
+  --s-3:   12px;
+  --s-4:   16px;
+  --s-5:   24px;
+  --s-6:   32px;
+  --s-7:   48px;
+  --s-8:   64px;
+  --s-9:   96px;
+  --s-10: 128px;
+  --s-11: 192px;
+  --s-12: 256px;
+
+  /* -------- RADII --------
+     Restrained. Most surfaces are sharp.                     */
+  --r-none: 0;
+  --r-xs:   2px;       /* buttons, inputs                     */
+  --r-sm:   4px;       /* cards                               */
+  --r-md:   8px;       /* image plates, avatars-as-tile       */
+  --r-full: 999px;     /* pills (only for status/tags)        */
+
+  /* -------- SHADOWS --------
+     We barely use shadows. Hairlines do the work.            */
+  --shadow-none:  none;
+  --shadow-rule:  inset 0 -1px 0 var(--rule-soft);
+  --shadow-card:  0 1px 0 var(--rule-soft);
+  --shadow-lift:  0 8px 24px -12px rgba(20, 17, 14, 0.18);
+
+  /* -------- MOTION -------- */
+  --ease-out:     cubic-bezier(0.22, 0.61, 0.36, 1);
+  --ease-in-out:  cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-fast:     120ms;
+  --dur-base:     220ms;
+  --dur-slow:     400ms;
+
+  /* -------- LAYOUT -------- */
+  --measure:      68ch;          /* readable text column      */
+  --page-max:    1408px;          /* outer container          */
+  --page-gutter: clamp(20px, 4vw, 64px);
+}
+
+/* ============================================================
+   SEMANTIC TYPE STYLES
+   Use these in HTML directly, or via the helper classes.
+   ============================================================ */
+
+html, body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-sans);
+  font-size: var(--t-body-lg);
+  line-height: var(--lh-body);
+  letter-spacing: var(--tr-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* DISPLAY — serif, editorial */
+.t-display-1, h1.display {
+  font-family: var(--font-display);
+  font-weight: var(--w-regular);
+  font-size: var(--t-display-1);
+  line-height: var(--lh-display);
+  letter-spacing: var(--tr-display);
+  color: var(--fg);
+}
+
+.t-display-2 {
+  font-family: var(--font-display);
+  font-weight: var(--w-regular);
+  font-size: var(--t-display-2);
+  line-height: var(--lh-display);
+  letter-spacing: var(--tr-display);
+}
+
+.t-display-3, h1 {
+  font-family: var(--font-display);
+  font-weight: var(--w-regular);
+  font-size: var(--t-display-3);
+  line-height: var(--lh-tight);
+  letter-spacing: var(--tr-display);
+}
+
+.t-display-4, h2 {
+  font-family: var(--font-display);
+  font-weight: var(--w-regular);
+  font-size: var(--t-display-4);
+  line-height: var(--lh-tight);
+  letter-spacing: var(--tr-headline);
+}
+
+/* HEADLINE (sans, smaller h-levels) */
+h3 {
+  font-family: var(--font-sans);
+  font-weight: var(--w-medium);
+  font-size: 24px;
+  line-height: var(--lh-tight);
+  letter-spacing: var(--tr-headline);
+}
+
+h4 {
+  font-family: var(--font-sans);
+  font-weight: var(--w-medium);
+  font-size: 18px;
+  line-height: var(--lh-snug);
+  letter-spacing: var(--tr-headline);
+}
+
+/* BODY */
+.t-lede, p.lede {
+  font-family: var(--font-sans);
+  font-size: var(--t-body-xl);
+  line-height: var(--lh-snug);
+  color: var(--fg);
+  letter-spacing: -0.005em;
+  max-width: var(--measure);
+}
+
+p, .t-body {
+  font-family: var(--font-sans);
+  font-size: var(--t-body-lg);
+  line-height: var(--lh-body);
+  color: var(--fg);
+  max-width: var(--measure);
+}
+
+.t-body-sm {
+  font-size: var(--t-body-sm);
+  line-height: var(--lh-snug);
+  color: var(--fg-muted);
+}
+
+/* EYEBROW — uppercase labels above section heads */
+.t-eyebrow {
+  font-family: var(--font-mono);
+  font-size: var(--t-caption);
+  text-transform: uppercase;
+  letter-spacing: var(--tr-caption);
+  color: var(--fg-muted);
+  font-weight: var(--w-regular);
+}
+
+.t-caption {
+  font-size: var(--t-caption);
+  color: var(--fg-muted);
+  letter-spacing: 0.02em;
+}
+
+/* MONO — for stats, dates, credentials */
+.t-mono, code, kbd {
+  font-family: var(--font-mono);
+  font-feature-settings: "tnum" 1, "zero" 1;
+  letter-spacing: 0;
+}
+
+/* DISPLAY ITALIC — the signature treatment */
+.t-italic {
+  font-style: italic;
+  font-family: var(--font-display);
+}
+
+/* LINKS — underlined, ink color, never accent by default */
+a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  text-decoration-color: var(--ink-300);
+  transition: text-decoration-color var(--dur-fast) var(--ease-out),
+              color var(--dur-fast) var(--ease-out);
+}
+a:hover {
+  text-decoration-color: var(--ink-900);
+}
+
+/* HORIZONTAL RULES — editorial hairlines */
+hr {
+  border: 0;
+  border-top: 1px solid var(--border);
+  margin: var(--s-7) 0;
+}
+
+hr.strong { border-top-color: var(--border-strong); }
+hr.thick  { border-top-width: 2px; border-top-color: var(--border-strong); }

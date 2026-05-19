@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400">
+  <title>Venture tile placeholder</title>
+  <rect width="400" height="400" fill="#FBF9F4"></rect>
+  <rect x="0.5" y="0.5" width="399" height="399" fill="none" stroke="#D6CFBE"></rect>
+  <g font-family="&#39;Geist Mono&#39;, monospace" fill="#A29A8C" font-size="9" letter-spacing="2" text-anchor="middle">
+    <text x="200" y="204">VENTURE STILL</text>
+  </g>
+</svg>
