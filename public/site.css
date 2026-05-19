@@ -2569,3 +2569,305 @@ img { max-width: 100%; display: block; }
   .vp-contact-grid { grid-template-columns: 1fr; gap: 40px; }
   .vp-contact-form-wrap { padding: 24px 22px 22px; }
 }
+
+/* ============================================================
+   MOBILE & DRAWER — responsive overhaul + slide-in menu
+   Adds hamburger drawer, expanded mobile breakpoint, phone breakpoint,
+   stronger section fade-ins, footer reveal.
+   ============================================================ */
+
+/* 1. Hamburger button */
+.vp-menu-btn {
+  display: none;
+  width: 40px;
+  height: 40px;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  padding: 0;
+}
+.vp-menu-btn span {
+  width: 22px;
+  height: 2px;
+  background: var(--ink-900);
+  border-radius: 1px;
+  transition: transform 280ms var(--ease-out), opacity 200ms var(--ease-out);
+}
+.vp-menu-btn.is-open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.vp-menu-btn.is-open span:nth-child(2) { opacity: 0; }
+.vp-menu-btn.is-open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+/* 2. Drawer + backdrop */
+body.vp-no-scroll { overflow: hidden; }
+
+.vp-drawer-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(20, 17, 14, 0.55);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 320ms var(--ease-out);
+  z-index: 105;
+}
+.vp-drawer-backdrop.is-open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.vp-drawer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: min(86vw, 360px);
+  background: var(--paper-100);
+  border-right: 1px solid var(--rule-strong);
+  padding: 24px 28px 28px;
+  display: flex;
+  flex-direction: column;
+  z-index: 110;
+  transform: translateX(-100%);
+  transition: transform 320ms var(--ease-out);
+  overflow-y: auto;
+}
+.vp-drawer.is-open { transform: translateX(0); }
+
+.vp-drawer-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 36px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 22px;
+  line-height: 1;
+  color: var(--ink-900);
+  padding: 0;
+}
+.vp-drawer-close:hover { color: var(--accent-700); }
+
+.vp-drawer-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: 64px;
+}
+.vp-drawer-nav a {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-style: normal;
+  font-size: clamp(28px, 6vw, 38px);
+  line-height: 1.15;
+  letter-spacing: -0.022em;
+  color: var(--ink-900);
+  text-decoration: none;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--rule-faint);
+  transition: color 180ms var(--ease-out), padding-left 180ms var(--ease-out);
+}
+.vp-drawer-nav a:hover {
+  color: var(--accent-700);
+  padding-left: 6px;
+}
+
+.vp-drawer-socials {
+  display: flex;
+  gap: 10px;
+  margin-top: 28px;
+  margin-bottom: 8px;
+}
+.vp-drawer-social {
+  width: 38px;
+  height: 38px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--rule-strong);
+  border-radius: 2px;
+  color: var(--ink-900);
+  text-decoration: none;
+  transition: background 180ms var(--ease-out), color 180ms var(--ease-out);
+}
+.vp-drawer-social svg {
+  width: 16px;
+  height: 16px;
+  display: block;
+}
+.vp-drawer-social:hover {
+  background: var(--ink-900);
+  color: var(--paper-100);
+}
+
+.vp-drawer-logo {
+  margin-top: auto;
+  padding-top: 24px;
+  border-top: 1px solid var(--rule-soft);
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 30px;
+  line-height: 1;
+  letter-spacing: -0.022em;
+  color: var(--ink-900);
+  text-decoration: none;
+}
+
+/* 3. Reduced motion override */
+@media (prefers-reduced-motion: reduce) {
+  .vp-drawer, .vp-drawer-backdrop, .vp-menu-btn span { transition: none; }
+}
+
+/* 4. Expanded mobile breakpoint (≤900px) */
+@media (max-width: 900px) {
+  .vp-menu-btn { display: inline-flex; }
+  .vp-header-meta { display: none; }
+  .vp-header-inner { grid-template-columns: auto 1fr; gap: 14px; padding: 14px var(--page-gutter); }
+  .vp-wordmark { font-size: 24px; }
+
+  /* hero */
+  .vp-hero-grid { grid-template-columns: 1fr; gap: 32px; height: auto; align-items: stretch; }
+  .vp-hero-left { padding-top: 24px; padding-bottom: 24px; gap: 14px; }
+  .vp-hero-name { font-size: clamp(44px, 11vw, 72px); }
+  .vp-hero-lede { font-size: clamp(17px, 4.2vw, 22px); max-width: 100%; }
+  .vp-hero-lede br { display: none; }
+  .vp-hero-pill { font-size: 14px; padding: 10px 14px 10px 16px; }
+  .vp-hero-right { position: relative; height: auto; align-self: center; }
+  .vp-portrait-cutout { position: relative; bottom: auto; right: 0; height: auto; width: 100%; max-width: 460px; max-height: 60vh; object-fit: contain; margin: 0 auto; display: block; }
+
+  /* sections */
+  .vp-section { padding-top: 64px; padding-bottom: 56px; scroll-margin-top: 72px; }
+  .vp-section + .vp-section { padding-top: 56px; }
+  .vp-section-title { font-size: clamp(36px, 8vw, 56px); white-space: normal; }
+  .vp-section-title--nowrap { white-space: normal; }
+  .vp-section-head { padding-bottom: 18px; margin-bottom: 28px; gap: 18px; }
+  .vp-section-lede { font-size: 16px; }
+
+  /* numbers */
+  .vp-numbers-title { font-size: clamp(28px, 7vw, 40px); }
+  .vp-stats-grid { grid-template-columns: repeat(2, 1fr); }
+  .vp-stat { padding: 24px 18px; border-right: 1px solid var(--rule-soft) !important; }
+  .vp-stat:nth-child(2n) { border-right: 0 !important; }
+  .vp-stat-num { font-size: clamp(36px, 9vw, 60px); }
+
+  /* about */
+  .vp-section--about { padding-top: 48px; padding-bottom: 0; }
+  .vp-about-intro p { font-size: clamp(18px, 4.6vw, 26px); }
+  .vp-about-intro { margin-bottom: 32px; }
+  .vp-about-wrap { gap: 18px; grid-template-columns: 1fr; }
+  .vp-about-col--image { order: -1; min-height: 0; height: 320px; }
+  .vp-about-portrait { height: 100%; max-width: 78vw; }
+  .vp-about-bleed--bar1, .vp-about-bleed--bar2 { display: none; }
+  .vp-about-spotlight { height: 360px; }
+  .vp-about-col--left, .vp-about-col--right { padding-bottom: 0; }
+  .vp-about-col p { font-size: 16px; line-height: 1.6; }
+
+  /* companies */
+  .vp-cos-grid { grid-template-columns: 1fr; }
+  .vp-co { min-height: 0; padding: 28px 24px 24px; gap: 18px; }
+  .vp-co-plate { aspect-ratio: 16 / 9; }
+  .vp-co-mark { font-size: 36px; }
+  .vp-co-name { font-size: 22px; }
+  .vp-co-one { font-size: 16px; }
+  .vp-co-domain { font-size: 15px; }
+  .vp-co-visit { font-size: 14px; padding: 8px 14px; }
+
+  /* gallery */
+  .vp-gallery-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  .vp-gallery-tile-caption { padding: 22px 14px 12px; font-size: 13px; }
+  .vp-gallery-tile-caption em { font-size: 16px; }
+
+  /* letters */
+  .vp-lor-grid { grid-template-columns: repeat(2, 1fr); gap: 18px; }
+  .vp-lor-card-from { font-size: 18px; }
+
+  /* testimonials */
+  .vp-videos-grid--three { grid-template-columns: 1fr; gap: 18px; }
+  .vp-shorts-row { grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .vp-client-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .vp-emp-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  .vp-emp-caption { font-size: 13px; }
+  .vp-emp-caption em { font-size: 16px; }
+  .vp-test-subhead h3 { font-size: 24px; }
+  .vp-video-cap em { font-size: 14px; }
+
+  /* contact */
+  .vp-contact-grid { grid-template-columns: 1fr; gap: 32px; }
+  .vp-contact-lead { font-size: clamp(24px, 6vw, 36px); }
+  .vp-contact-form-wrap { padding: 22px 18px 20px; }
+  .vp-form-row { grid-template-columns: 1fr; gap: 0; }
+  .vp-input, .vp-textarea, .vp-select { font-size: 16px; padding: 11px 12px; }
+  .vp-btn-submit { width: 100%; justify-content: center; font-size: 14px; padding: 14px 22px; }
+
+  /* footer */
+  .vp-footer-inner { padding: 40px var(--page-gutter) 20px; }
+  .vp-footer-grid { grid-template-columns: 1fr; gap: 32px; padding: 28px 0 24px; }
+  .vp-footer-wordmark { font-size: 36px; }
+  .vp-footer-tag { font-size: 15px; }
+  .vp-footer-meta { flex-direction: column; gap: 8px; align-items: flex-start; padding-top: 16px; }
+  .vp-socials { gap: 8px; }
+  .vp-social { width: 38px; height: 38px; }
+
+  /* achievements */
+  .vp-ach { padding: 24px 20px 20px; min-height: 0; }
+  .vp-ach-title { font-size: clamp(24px, 6vw, 32px); }
+}
+
+/* 5. Phone breakpoint (≤560px) */
+@media (max-width: 560px) {
+  .vp-stats-grid { grid-template-columns: 1fr; }
+  .vp-stat { border-right: 0 !important; }
+  .vp-gallery-grid { grid-template-columns: 1fr; gap: 14px; }
+  .vp-lor-grid { grid-template-columns: 1fr; gap: 22px; }
+  .vp-emp-grid { grid-template-columns: 1fr; gap: 14px; }
+  .vp-client-grid { grid-template-columns: 1fr; gap: 14px; }
+  .vp-shorts-row { grid-template-columns: 1fr; gap: 14px; }
+  .vp-hero-tagline { gap: 6px; font-size: 11px; letter-spacing: 0.1em; }
+  .vp-hero-tagline span:not(.sep) { white-space: nowrap; }
+  .vp-section { padding-top: 48px; padding-bottom: 44px; }
+  .vp-section + .vp-section { padding-top: 44px; }
+  .vp-section-head { padding-bottom: 14px; margin-bottom: 22px; }
+  .vp-about-col--image { height: 260px; }
+  .vp-about-portrait { max-width: 86vw; }
+  .vp-contact-form-wrap { padding: 18px 14px 16px; }
+  .vp-co-plate { aspect-ratio: 4 / 3; }
+  .vp-co-mark { font-size: 32px; }
+}
+
+/* 6. Stronger section fade-in + footer reveal */
+@media (prefers-reduced-motion: no-preference) {
+  .vp-reveal {
+    transform: translateY(48px);
+    filter: blur(2px);
+  }
+  .vp-reveal.is-visible {
+    transform: none;
+    filter: blur(0);
+    transition: opacity 1s var(--ease-out),
+                transform 1s var(--ease-out),
+                filter 0.8s var(--ease-out);
+  }
+}
+
+/* Footer reveal */
+.vp-footer.vp-reveal {
+  opacity: 0;
+  transform: translateY(36px);
+  transition: opacity 0.95s var(--ease-out), transform 0.95s var(--ease-out);
+  will-change: opacity, transform;
+}
+.vp-footer.vp-reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .vp-footer.vp-reveal { opacity: 1; transform: none; transition: none; }
+}
