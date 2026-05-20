@@ -1,0 +1,129 @@
+---
+import { getCollection, render } from 'astro:content';
+import BlogLayout from '../../layouts/BlogLayout.astro';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog', ({ data }) => !data.draft);
+  return posts.map((post) => ({ params: { slug: post.id }, props: { post } }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+
+const allPosts = (await getCollection('blog', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+const fmt = new Intl.DateTimeFormat('en-GB', { year: 'numeric', month: 'short', day: '2-digit' });
+const currentIdx = allPosts.findIndex((p) => p.id === post.id);
+const prev = currentIdx < allPosts.length - 1 ? allPosts[currentIdx + 1] : null;
+const next = currentIdx > 0 ? allPosts[currentIdx - 1] : null;
+
+const readingTime = Math.max(1, Math.round(post.body.split(/\s+/).length / 220));
+---
+<BlogLayout
+  title={`${post.data.title} — Priyanshu Singh`}
+  description={post.data.description}
+  canonical={`https://vasprisin.com/blog/${post.id}`}>
+
+  <section class="vp-band vp-band--light">
+    <div class="vp-band-inner">
+      <section class="vp-section vp-blog-shell">
+
+        <div class="vp-blog-grid">
+
+          <!-- LEFT SIDEBAR INDEX -->
+          <aside class="vp-blog-side" aria-label="All posts">
+            <div class="vp-blog-side-label">Index</div>
+            <ol class="vp-blog-side-list">
+              {allPosts.map((p, i) => (
+                <li class={`vp-blog-side-item ${p.id === post.id ? 'is-current' : ''}`}>
+                  <a href={`/blog/${p.id}`}>
+                    <span class="vp-blog-side-num">{String(i + 1).padStart(2, '0')}</span>
+                    <span class="vp-blog-side-title">{p.data.title}</span>
+                    <span class="vp-blog-side-date">{fmt.format(p.data.date)}</span>
+                  </a>
+                </li>
+              ))}
+            </ol>
+            <div class="vp-blog-side-back">
+              <a href="/blog">← All writing</a>
+            </div>
+          </aside>
+
+          <!-- ARTICLE -->
+          <article class="vp-blog-article">
+
+            <header class="vp-blog-article-head">
+              <div class="vp-eyebrow">
+                <span class="vp-eyebrow-num">★</span>
+                <span class="vp-eyebrow-sep">—</span>
+                <span>Essay</span>
+              </div>
+              <h1 class="vp-blog-article-title">{post.data.title}</h1>
+              <p class="vp-blog-article-desc">{post.data.description}</p>
+              <div class="vp-blog-article-byline">
+                <span><em>By</em> {post.data.author}</span>
+                <span class="vp-blog-article-sep">·</span>
+                <time datetime={post.data.date.toISOString()}>{fmt.format(post.data.date)}</time>
+                <span class="vp-blog-article-sep">·</span>
+                <span>{readingTime} min read</span>
+                {post.data.tags.length > 0 && (
+                  <>
+                    <span class="vp-blog-article-sep">·</span>
+                    <span class="vp-blog-card-tags">
+                      {post.data.tags.map((t) => <span class="vp-blog-tag">{t}</span>)}
+                    </span>
+                  </>
+                )}
+              </div>
+            </header>
+
+            <div class="vp-prose">
+              <Content />
+            </div>
+
+            <!-- inline newsletter pitch -->
+            <aside class="vp-news-inline vp-news-inline--article">
+              <div class="vp-news-inline-text">
+                <div class="vp-eyebrow">
+                  <span class="vp-eyebrow-num">★</span>
+                  <span class="vp-eyebrow-sep">—</span>
+                  <span>Newsletter</span>
+                </div>
+                <h3 class="vp-news-inline-title">Liked this? Get the <em>next one</em> by email.</h3>
+                <p>One short note a week. Capital, pipeline, operating. No spam.</p>
+              </div>
+              <form class="vp-news-inline-form" onsubmit="event.preventDefault(); this.querySelector('.vp-news-meta').textContent='Thanks — you\\'re on the list.'; this.querySelector('button').textContent='Done';">
+                <input class="vp-input" type="email" name="email" placeholder="you@company.com" autocomplete="email" required />
+                <button class="vp-btn-submit" type="submit">Subscribe <span aria-hidden="true">→</span></button>
+                <div class="vp-news-meta"></div>
+              </form>
+            </aside>
+
+            <!-- prev / next -->
+            <nav class="vp-blog-pn" aria-label="Post navigation">
+              <div class="vp-blog-pn-col">
+                {prev && (
+                  <a href={`/blog/${prev.id}`} class="vp-blog-pn-link">
+                    <span class="vp-blog-pn-label">← Older</span>
+                    <span class="vp-blog-pn-title">{prev.data.title}</span>
+                  </a>
+                )}
+              </div>
+              <div class="vp-blog-pn-col vp-blog-pn-col--right">
+                {next && (
+                  <a href={`/blog/${next.id}`} class="vp-blog-pn-link">
+                    <span class="vp-blog-pn-label">Newer →</span>
+                    <span class="vp-blog-pn-title">{next.data.title}</span>
+                  </a>
+                )}
+              </div>
+            </nav>
+          </article>
+
+        </div>
+      </section>
+    </div>
+  </section>
+
+</BlogLayout>

@@ -1,0 +1,102 @@
+---
+import { getCollection } from 'astro:content';
+import BlogLayout from '../../layouts/BlogLayout.astro';
+
+const posts = (await getCollection('blog', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+const fmt = new Intl.DateTimeFormat('en-GB', { year: 'numeric', month: 'short', day: '2-digit' });
+---
+<BlogLayout
+  title="Writing — Priyanshu Singh"
+  description="Essays on capital, pipeline, and operating across London, Dubai, and Mumbai. By Priyanshu Singh."
+  canonical="https://vasprisin.com/blog">
+
+  <section class="vp-band vp-band--light">
+    <div class="vp-band-inner">
+      <section class="vp-section vp-blog-shell">
+
+        <div class="vp-section-head">
+          <div class="vp-eyebrow">
+            <span class="vp-eyebrow-num">★</span>
+            <span class="vp-eyebrow-sep">—</span>
+            <span>Writing</span>
+          </div>
+          <h1 class="vp-section-title">Notes on <em>capital, pipeline, and operating.</em></h1>
+          <p class="vp-section-lede">
+            Essays from <em>Priyanshu Singh</em> &mdash; founder of Dolta and Capital Hunt.
+            Written from London, Dubai, and Mumbai.
+          </p>
+        </div>
+
+        <div class="vp-blog-grid">
+
+          <!-- LEFT SIDEBAR INDEX -->
+          <aside class="vp-blog-side" aria-label="All posts">
+            <div class="vp-blog-side-label">Index</div>
+            <ol class="vp-blog-side-list">
+              {posts.map((p, i) => (
+                <li class="vp-blog-side-item">
+                  <a href={`/blog/${p.id}`}>
+                    <span class="vp-blog-side-num">{String(i + 1).padStart(2, '0')}</span>
+                    <span class="vp-blog-side-title">{p.data.title}</span>
+                    <span class="vp-blog-side-date">{fmt.format(p.data.date)}</span>
+                  </a>
+                </li>
+              ))}
+            </ol>
+          </aside>
+
+          <!-- MAIN POST FEED -->
+          <div class="vp-blog-feed">
+            {posts.map((p, i) => (
+              <article class="vp-blog-card">
+                <div class="vp-blog-card-meta">
+                  <span class="vp-blog-card-num">{String(i + 1).padStart(2, '0')}</span>
+                  <span class="vp-blog-card-sep">—</span>
+                  <time datetime={p.data.date.toISOString()}>{fmt.format(p.data.date)}</time>
+                  <span class="vp-blog-card-sep">·</span>
+                  <span>{p.data.author}</span>
+                </div>
+                <h2 class="vp-blog-card-title">
+                  <a href={`/blog/${p.id}`}>{p.data.title}</a>
+                </h2>
+                <p class="vp-blog-card-desc">{p.data.description}</p>
+                <div class="vp-blog-card-foot">
+                  {p.data.tags.length > 0 && (
+                    <span class="vp-blog-card-tags">
+                      {p.data.tags.map((t) => <span class="vp-blog-tag">{t}</span>)}
+                    </span>
+                  )}
+                  <a class="vp-blog-card-read" href={`/blog/${p.id}`}>
+                    Read <span aria-hidden="true">→</span>
+                  </a>
+                </div>
+              </article>
+            ))}
+
+            <!-- inline newsletter section, mirrors the home page -->
+            <aside class="vp-news-inline">
+              <div class="vp-news-inline-text">
+                <div class="vp-eyebrow">
+                  <span class="vp-eyebrow-num">★</span>
+                  <span class="vp-eyebrow-sep">—</span>
+                  <span>Newsletter</span>
+                </div>
+                <h3 class="vp-news-inline-title">Get new essays by <em>email.</em></h3>
+                <p>One short note a week. Capital, pipeline, operating. No spam.</p>
+              </div>
+              <form class="vp-news-inline-form" onsubmit="event.preventDefault(); this.querySelector('.vp-news-meta').textContent='Thanks — you\\'re on the list.'; this.querySelector('button').textContent='Done';">
+                <input class="vp-input" type="email" name="email" placeholder="you@company.com" autocomplete="email" required />
+                <button class="vp-btn-submit" type="submit">Subscribe <span aria-hidden="true">→</span></button>
+                <div class="vp-news-meta"></div>
+              </form>
+            </aside>
+          </div>
+
+        </div>
+      </section>
+    </div>
+  </section>
+
+</BlogLayout>

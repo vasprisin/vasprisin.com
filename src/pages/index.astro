@@ -39,7 +39,7 @@
         <a href="#about">About</a>
         <a href="#companies">Companies</a>
         <a href="#letters">Credentials</a>
-        <a href="#socials">Social Media</a>
+        <a href="/blog">Writing</a>
         <a href="#contact">Contact</a>
       </nav>
       <div class="vp-header-meta">
@@ -818,6 +818,39 @@
     </section>
 
     <!-- ============================================================
+         NEWSLETTER  (light) — small, before contact
+         ============================================================ -->
+    <section class="vp-band vp-band--light">
+      <div class="vp-band-inner">
+        <section id="newsletter" class="vp-section vp-section--newsletter">
+          <div class="vp-news-card">
+            <div class="vp-news-card-left">
+              <div class="vp-eyebrow">
+                <span class="vp-eyebrow-num">★</span>
+                <span class="vp-eyebrow-sep">&mdash;</span>
+                <span>Newsletter</span>
+              </div>
+              <h2 class="vp-news-card-title">Subscribe to my <em>email newsletter.</em></h2>
+              <p class="vp-news-card-lede">
+                One short note a week on <em>capital, pipeline, and operating</em>
+                across LDN, DXB, BOM. No spam, unsubscribe anytime.
+              </p>
+            </div>
+            <form class="vp-news-card-form" onsubmit="event.preventDefault(); this.querySelector('.vp-news-meta').textContent='Thanks — you\'re on the list.'; this.querySelector('button').textContent='Done';">
+              <div class="vp-news-card-row">
+                <input class="vp-input" type="email" name="email" placeholder="you@company.com" autocomplete="email" required />
+                <button class="vp-btn-submit" type="submit">
+                  Subscribe <span aria-hidden="true">&rarr;</span>
+                </button>
+              </div>
+              <div class="vp-news-meta">Joined by 2,400+ operators.</div>
+            </form>
+          </div>
+        </section>
+      </div>
+    </section>
+
+    <!-- ============================================================
          CONTACT  (light)
          ============================================================ -->
     <section class="vp-band vp-band--light">
@@ -947,6 +980,7 @@
           <a href="#companies">Companies</a>
           <a href="#gallery">Gallery</a>
           <a href="#letters">Letters</a>
+          <a href="/blog">Writing</a>
           <a href="#testimonials">Testimonials</a>
           <a href="#employee">Employee</a>
           <a href="#youtube">YouTube</a>
@@ -964,6 +998,29 @@
     </div>
   </footer>
 
+  <!-- NEWSLETTER POPUP (exit intent) -->
+  <div class="vp-popup-backdrop" id="vp-popup-backdrop" aria-hidden="true"></div>
+  <aside class="vp-popup" id="vp-popup" aria-hidden="true" aria-label="Subscribe to newsletter" role="dialog">
+    <button class="vp-popup-close" id="vp-popup-close" aria-label="Close">✕</button>
+    <div class="vp-popup-eyebrow">
+      <span class="vp-eyebrow-num">★</span>
+      <span class="vp-eyebrow-sep">—</span>
+      <span>Newsletter</span>
+    </div>
+    <h3 class="vp-popup-title">Don&rsquo;t go <em>empty&#8209;handed.</em></h3>
+    <p class="vp-popup-lede">
+      Weekly notes on <em>capital, pipeline, and operating</em> across LDN, DXB, BOM.
+      No spam, unsubscribe anytime.
+    </p>
+    <form class="vp-popup-form" id="vp-popup-form">
+      <input class="vp-input vp-popup-input" type="email" name="email" placeholder="you@company.com" autocomplete="email" required />
+      <button class="vp-btn-submit vp-popup-submit" type="submit">
+        Subscribe <span aria-hidden="true">&rarr;</span>
+      </button>
+    </form>
+    <div class="vp-popup-meta" id="vp-popup-meta">Joined by 2,400+ operators.</div>
+  </aside>
+
   <div class="vp-drawer-backdrop" id="vp-drawer-backdrop" aria-hidden="true"></div>
   <aside class="vp-drawer" id="vp-drawer" aria-hidden="true" aria-label="Mobile navigation">
     <button class="vp-drawer-close" id="vp-drawer-close" aria-label="Close menu">✕</button>
@@ -971,7 +1028,7 @@
       <a href="#about">About</a>
       <a href="#companies">Companies</a>
       <a href="#letters">Credentials</a>
-      <a href="#socials">Social Media</a>
+      <a href="/blog">Writing</a>
       <a href="#contact">Contact</a>
     </nav>
     <div class="vp-drawer-socials" aria-label="Social media">
@@ -1088,6 +1145,76 @@
     all.forEach(function (t) {
       if (!t.classList.contains("is-visible")) io.observe(t);
     });
+  })();
+
+  // newsletter exit-intent popup
+  (function () {
+    var popup = document.getElementById("vp-popup");
+    var backdrop = document.getElementById("vp-popup-backdrop");
+    var closeBtn = document.getElementById("vp-popup-close");
+    var form = document.getElementById("vp-popup-form");
+    var meta = document.getElementById("vp-popup-meta");
+    if (!popup || !backdrop) return;
+
+    var STORAGE_KEY = "vp-popup-shown";
+    var shown = false;
+
+    function alreadyShown() {
+      try { return sessionStorage.getItem(STORAGE_KEY) === "1"; } catch (e) { return false; }
+    }
+    function markShown() {
+      try { sessionStorage.setItem(STORAGE_KEY, "1"); } catch (e) {}
+    }
+    function open() {
+      if (shown || alreadyShown()) return;
+      shown = true;
+      markShown();
+      popup.classList.add("is-open");
+      backdrop.classList.add("is-open");
+      popup.setAttribute("aria-hidden", "false");
+    }
+    function close() {
+      popup.classList.remove("is-open");
+      backdrop.classList.remove("is-open");
+      popup.setAttribute("aria-hidden", "true");
+    }
+
+    // exit-intent: mouse leaves top of viewport
+    document.addEventListener("mouseout", function (e) {
+      if (!e.relatedTarget && !e.toElement && e.clientY <= 0) open();
+    });
+
+    // mobile fallback: 45s + 50% scroll depth
+    var isTouch = window.matchMedia && window.matchMedia("(pointer: coarse)").matches;
+    if (isTouch) {
+      var started = Date.now();
+      var fired = false;
+      function maybeFire() {
+        if (fired) return;
+        var elapsed = Date.now() - started;
+        var depth = (window.scrollY + window.innerHeight) / document.documentElement.scrollHeight;
+        if (elapsed > 45000 && depth > 0.5) {
+          fired = true;
+          open();
+        }
+      }
+      window.addEventListener("scroll", maybeFire, { passive: true });
+      setTimeout(maybeFire, 45000);
+    }
+
+    if (closeBtn) closeBtn.addEventListener("click", close);
+    backdrop.addEventListener("click", close);
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && popup.classList.contains("is-open")) close();
+    });
+    if (form) {
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+        if (meta) meta.textContent = "Thanks — you're on the list.";
+        form.querySelector(".vp-popup-submit").textContent = "Done";
+        setTimeout(close, 1400);
+      });
+    }
   })();
 </script>
 

@@ -1,0 +1,307 @@
+---
+interface Props {
+  title: string;
+  description: string;
+  canonical?: string;
+  ogImage?: string;
+}
+
+const { title, description, canonical, ogImage = '/assets/priyanshu-portrait.png' } = Astro.props;
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{title}</title>
+  <meta name="description" content={description} />
+  {canonical && <link rel="canonical" href={canonical} />}
+
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:image" content={ogImage} />
+  <meta property="og:type" content="article" />
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="icon" href="/favicon.ico" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&display=swap"
+    rel="stylesheet" />
+
+  <link rel="stylesheet" href="/colors_and_type.css" />
+  <link rel="stylesheet" href="/site.css" />
+</head>
+<body>
+
+<div class="vp-page">
+
+  <!-- HEADER -->
+  <header class="vp-header" id="vp-header">
+    <div class="vp-rule-strong-top"></div>
+    <div class="vp-header-inner">
+      <button class="vp-menu-btn" id="vp-menu-btn" aria-label="Open menu" aria-controls="vp-drawer" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+      <a class="vp-wordmark" href="/"><em>vasprisin</em></a>
+      <nav class="vp-nav">
+        <a href="/#about">About</a>
+        <a href="/#companies">Companies</a>
+        <a href="/#letters">Credentials</a>
+        <a href="/blog">Writing</a>
+        <a href="/#contact">Contact</a>
+      </nav>
+      <div class="vp-header-meta">
+        <a class="vp-header-social" href="https://linkedin.com/in/vasprisin" target="_blank" rel="noopener" aria-label="LinkedIn">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.5 2h-17A1.5 1.5 0 0 0 2 3.5v17A1.5 1.5 0 0 0 3.5 22h17a1.5 1.5 0 0 0 1.5-1.5v-17A1.5 1.5 0 0 0 20.5 2zM8 19H5V9h3v10zM6.5 7.7A1.7 1.7 0 1 1 6.5 4.3a1.7 1.7 0 0 1 0 3.4zM19 19h-3v-5.3c0-1.3 0-2.9-1.8-2.9s-2 1.4-2 2.8V19h-3V9h2.9v1.4h.04A3.16 3.16 0 0 1 14.9 8.8c3 0 3.6 2 3.6 4.5V19z"></path></svg>
+        </a>
+        <a class="vp-header-social" href="https://instagram.com/vasprisin" target="_blank" rel="noopener" aria-label="Instagram">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"></circle></svg>
+        </a>
+        <a class="vp-header-social" href="https://x.com/vasprisin" target="_blank" rel="noopener" aria-label="X">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231 5.45-6.231zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"></path></svg>
+        </a>
+        <a class="vp-header-social" href="https://youtube.com/@vasprisin28" target="_blank" rel="noopener" aria-label="YouTube">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.6 3.5 12 3.5 12 3.5s-7.6 0-9.4.6A3 3 0 0 0 .5 6.2 31.4 31.4 0 0 0 0 12a31.4 31.4 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.8.6 9.4.6 9.4.6s7.6 0 9.4-.6a3 3 0 0 0 2.1-2.1c.4-1.9.5-3.8.5-5.8a31.4 31.4 0 0 0-.5-5.8zM9.7 15.6v-7.2L15.8 12l-6.1 3.6z"></path></svg>
+        </a>
+      </div>
+    </div>
+    <div class="vp-rule"></div>
+  </header>
+
+  <main class="vp-main">
+    <slot />
+  </main>
+
+  <!-- NEWSLETTER POPUP (exit intent) -->
+  <div class="vp-popup-backdrop" id="vp-popup-backdrop" aria-hidden="true"></div>
+  <aside class="vp-popup" id="vp-popup" aria-hidden="true" aria-label="Subscribe to newsletter" role="dialog">
+    <button class="vp-popup-close" id="vp-popup-close" aria-label="Close">✕</button>
+    <div class="vp-popup-eyebrow">
+      <span class="vp-eyebrow-num">★</span>
+      <span class="vp-eyebrow-sep">—</span>
+      <span>Newsletter</span>
+    </div>
+    <h3 class="vp-popup-title">Don&rsquo;t go <em>empty&#8209;handed.</em></h3>
+    <p class="vp-popup-lede">
+      Weekly notes on <em>capital, pipeline, and operating</em> across LDN, DXB, BOM.
+      No spam, unsubscribe anytime.
+    </p>
+    <form class="vp-popup-form" id="vp-popup-form">
+      <input class="vp-input vp-popup-input" type="email" name="email" placeholder="you@company.com" autocomplete="email" required />
+      <button class="vp-btn-submit vp-popup-submit" type="submit">
+        Subscribe <span aria-hidden="true">→</span>
+      </button>
+    </form>
+    <div class="vp-popup-meta" id="vp-popup-meta">Joined by 2,400+ operators.</div>
+  </aside>
+
+  <!-- FOOTER -->
+  <footer class="vp-footer">
+    <div class="vp-footer-inner">
+      <div class="vp-rule-strong"></div>
+      <div class="vp-footer-grid">
+        <div>
+          <div class="vp-footer-wordmark"><em>vasprisin</em></div>
+          <p class="vp-footer-tag">
+            The personal site of Priyanshu Singh.<br />
+            Founder, operator. Based across London, Dubai, and Mumbai.
+          </p>
+          <div class="vp-footer-email"><a href="mailto:vp@vasprisin.com">vp@vasprisin.com</a></div>
+          <div class="vp-socials" aria-label="Social media">
+            <a class="vp-social" href="https://linkedin.com/in/vasprisin" target="_blank" rel="noopener" aria-label="LinkedIn">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.5 2h-17A1.5 1.5 0 0 0 2 3.5v17A1.5 1.5 0 0 0 3.5 22h17a1.5 1.5 0 0 0 1.5-1.5v-17A1.5 1.5 0 0 0 20.5 2zM8 19H5V9h3v10zM6.5 7.7A1.7 1.7 0 1 1 6.5 4.3a1.7 1.7 0 0 1 0 3.4zM19 19h-3v-5.3c0-1.3 0-2.9-1.8-2.9s-2 1.4-2 2.8V19h-3V9h2.9v1.4h.04A3.16 3.16 0 0 1 14.9 8.8c3 0 3.6 2 3.6 4.5V19z"></path></svg>
+            </a>
+            <a class="vp-social" href="https://x.com/vasprisin" target="_blank" rel="noopener" aria-label="X">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231 5.45-6.231zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"></path></svg>
+            </a>
+            <a class="vp-social" href="https://instagram.com/vasprisin" target="_blank" rel="noopener" aria-label="Instagram">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"></circle></svg>
+            </a>
+            <a class="vp-social" href="https://youtube.com/@vasprisin" target="_blank" rel="noopener" aria-label="YouTube">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.6 3.5 12 3.5 12 3.5s-7.6 0-9.4.6A3 3 0 0 0 .5 6.2 31.4 31.4 0 0 0 0 12a31.4 31.4 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.8.6 9.4.6 9.4.6s7.6 0 9.4-.6a3 3 0 0 0 2.1-2.1c.4-1.9.5-3.8.5-5.8a31.4 31.4 0 0 0-.5-5.8zM9.7 15.6v-7.2L15.8 12l-6.1 3.6z"></path></svg>
+            </a>
+            <a class="vp-social" href="mailto:vp@vasprisin.com" aria-label="Email">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="1"></rect><path d="M3 7l9 6 9-6"></path></svg>
+            </a>
+          </div>
+        </div>
+        <div class="vp-footer-col">
+          <div class="vp-footer-label">Site</div>
+          <a href="/#companies">Companies</a>
+          <a href="/#gallery">Gallery</a>
+          <a href="/#letters">Letters</a>
+          <a href="/blog">Writing</a>
+          <a href="/#testimonials">Testimonials</a>
+          <a href="/#contact">Contact</a>
+        </div>
+      </div>
+      <div class="vp-rule"></div>
+      <div class="vp-footer-meta">
+        <span>© 2026 Priyanshu Singh</span>
+        <span>London <span class="vp-dot">·</span> Dubai <span class="vp-dot">·</span> Mumbai</span>
+        <span>@vasprisin</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- DRAWER -->
+  <div class="vp-drawer-backdrop" id="vp-drawer-backdrop" aria-hidden="true"></div>
+  <aside class="vp-drawer" id="vp-drawer" aria-hidden="true" aria-label="Mobile navigation">
+    <button class="vp-drawer-close" id="vp-drawer-close" aria-label="Close menu">✕</button>
+    <nav class="vp-drawer-nav">
+      <a href="/#about">About</a>
+      <a href="/#companies">Companies</a>
+      <a href="/#letters">Credentials</a>
+      <a href="/blog">Writing</a>
+      <a href="/#contact">Contact</a>
+    </nav>
+    <a class="vp-drawer-logo" href="/"><em>vasprisin</em></a>
+  </aside>
+
+</div>
+
+<script is:inline>
+  // sticky header
+  (function () {
+    var h = document.getElementById("vp-header");
+    if (!h) return;
+    var onScroll = function () {
+      if (window.scrollY > 8) h.classList.add("is-scrolled");
+      else h.classList.remove("is-scrolled");
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+  })();
+
+  // drawer
+  (function () {
+    var btn = document.getElementById("vp-menu-btn");
+    var drawer = document.getElementById("vp-drawer");
+    var backdrop = document.getElementById("vp-drawer-backdrop");
+    var closeBtn = document.getElementById("vp-drawer-close");
+    if (!btn || !drawer || !backdrop) return;
+    function open() {
+      drawer.classList.add("is-open");
+      backdrop.classList.add("is-open");
+      btn.classList.add("is-open");
+      btn.setAttribute("aria-expanded", "true");
+      drawer.setAttribute("aria-hidden", "false");
+      document.body.classList.add("vp-no-scroll");
+    }
+    function close() {
+      drawer.classList.remove("is-open");
+      backdrop.classList.remove("is-open");
+      btn.classList.remove("is-open");
+      btn.setAttribute("aria-expanded", "false");
+      drawer.setAttribute("aria-hidden", "true");
+      document.body.classList.remove("vp-no-scroll");
+    }
+    btn.addEventListener("click", open);
+    if (closeBtn) closeBtn.addEventListener("click", close);
+    backdrop.addEventListener("click", close);
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && drawer.classList.contains("is-open")) close();
+    });
+    drawer.querySelectorAll("a").forEach(function (a) {
+      a.addEventListener("click", close);
+    });
+  })();
+
+  // reveal-on-scroll
+  (function () {
+    var targets = document.querySelectorAll(".vp-section, .vp-blog-shell, .vp-footer");
+    targets.forEach(function (t) { t.classList.add("vp-reveal"); });
+    if (!("IntersectionObserver" in window)) {
+      targets.forEach(function (t) { t.classList.add("is-visible"); });
+      return;
+    }
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("is-visible");
+          io.unobserve(entry.target);
+        }
+      });
+    }, { rootMargin: "0px 0px -8% 0px", threshold: 0.05 });
+    targets.forEach(function (t) {
+      if (!t.classList.contains("is-visible")) io.observe(t);
+    });
+  })();
+
+  // newsletter exit-intent popup
+  (function () {
+    var popup = document.getElementById("vp-popup");
+    var backdrop = document.getElementById("vp-popup-backdrop");
+    var closeBtn = document.getElementById("vp-popup-close");
+    var form = document.getElementById("vp-popup-form");
+    var meta = document.getElementById("vp-popup-meta");
+    if (!popup || !backdrop) return;
+
+    var STORAGE_KEY = "vp-popup-shown";
+    var shown = false;
+
+    function alreadyShown() {
+      try { return sessionStorage.getItem(STORAGE_KEY) === "1"; } catch (e) { return false; }
+    }
+    function markShown() {
+      try { sessionStorage.setItem(STORAGE_KEY, "1"); } catch (e) {}
+    }
+    function open() {
+      if (shown || alreadyShown()) return;
+      shown = true;
+      markShown();
+      popup.classList.add("is-open");
+      backdrop.classList.add("is-open");
+      popup.setAttribute("aria-hidden", "false");
+    }
+    function close() {
+      popup.classList.remove("is-open");
+      backdrop.classList.remove("is-open");
+      popup.setAttribute("aria-hidden", "true");
+    }
+
+    // exit-intent: mouse leaves top of viewport
+    document.addEventListener("mouseout", function (e) {
+      if (!e.relatedTarget && !e.toElement && e.clientY <= 0) open();
+    });
+
+    // mobile fallback: time-based after 45s + at least 50% scroll depth
+    var isTouch = window.matchMedia && window.matchMedia("(pointer: coarse)").matches;
+    if (isTouch) {
+      var started = Date.now();
+      var fired = false;
+      function maybeFire() {
+        if (fired) return;
+        var elapsed = Date.now() - started;
+        var depth = (window.scrollY + window.innerHeight) / document.documentElement.scrollHeight;
+        if (elapsed > 45000 && depth > 0.5) {
+          fired = true;
+          open();
+        }
+      }
+      window.addEventListener("scroll", maybeFire, { passive: true });
+      setTimeout(maybeFire, 45000);
+    }
+
+    if (closeBtn) closeBtn.addEventListener("click", close);
+    backdrop.addEventListener("click", close);
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && popup.classList.contains("is-open")) close();
+    });
+    if (form) {
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+        if (meta) meta.textContent = "Thanks — you're on the list.";
+        form.querySelector(".vp-popup-submit").textContent = "Done";
+        setTimeout(close, 1400);
+      });
+    }
+  })();
+</script>
+
+</body>
+</html>
