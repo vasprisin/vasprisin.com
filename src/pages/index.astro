@@ -1,15 +1,73 @@
 ---
+const SITE_URL = 'https://vasprisin.com';
+const pageTitle = 'Priyanshu Singh — vasprisin';
+const pageDescription = 'Priyanshu Singh — founder, operator. Dolta, Capital Hunt, and seven other ventures. LDN / DXB / BOM.';
+const ogImage = new URL('/assets/priyanshu-portrait.png', SITE_URL).toString();
+
+const personJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: 'Priyanshu Singh',
+  alternateName: 'vasprisin',
+  url: SITE_URL,
+  image: ogImage,
+  jobTitle: 'Founder & Operator',
+  description: pageDescription,
+  worksFor: [
+    { '@type': 'Organization', name: 'Dolta', url: 'https://dolta.io' },
+    { '@type': 'Organization', name: 'Capital Hunt', url: 'https://capitalhunt.io' },
+  ],
+  sameAs: [
+    'https://linkedin.com/in/vasprisin',
+    'https://x.com/vasprisin',
+    'https://instagram.com/vasprisin',
+    'https://youtube.com/@vasprisin28',
+    'https://github.com/vasprisin',
+  ],
+};
+
+const websiteJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'vasprisin',
+  url: SITE_URL,
+  author: { '@type': 'Person', name: 'Priyanshu Singh' },
+};
 ---
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Priyanshu Singh — vasprisin</title>
-  <meta name="description" content="Priyanshu Singh — founder, operator. Dolta, Capital Hunt, and seven other ventures. LDN / DXB / BOM." />
+  <title>{pageTitle}</title>
+  <meta name="description" content={pageDescription} />
+  <link rel="canonical" href={SITE_URL + '/'} />
+
+  <meta property="og:title" content={pageTitle} />
+  <meta property="og:description" content={pageDescription} />
+  <meta property="og:image" content={ogImage} />
+  <meta property="og:image:alt" content="Priyanshu Singh — vasprisin" />
+  <meta property="og:url" content={SITE_URL + '/'} />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="vasprisin" />
+  <meta property="og:locale" content="en_GB" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={pageTitle} />
+  <meta name="twitter:description" content={pageDescription} />
+  <meta name="twitter:image" content={ogImage} />
+  <meta name="twitter:creator" content="@vasprisin" />
+  <meta name="twitter:site" content="@vasprisin" />
+
+  <meta name="author" content="Priyanshu Singh" />
+  <meta name="theme-color" content="#0f0f0f" />
 
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="icon" type="image/png" sizes="256x256" href="/favicon-256.png" />
   <link rel="icon" href="/favicon.ico" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+  <link rel="alternate" type="application/rss+xml" title="vasprisin — Writing" href="/rss.xml" />
+  <link rel="sitemap" type="application/xml" href="/sitemap-index.xml" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -18,6 +76,9 @@
     rel="stylesheet" />
 
   <link rel="stylesheet" href="/site.css" />
+
+  <script type="application/ld+json" set:html={JSON.stringify(personJsonLd)} />
+  <script type="application/ld+json" set:html={JSON.stringify(websiteJsonLd)} />
 </head>
 <body>
 
@@ -39,7 +100,7 @@
         <a href="#about">About</a>
         <a href="#companies">Companies</a>
         <a href="#letters">Credentials</a>
-        <a href="/blog">Writing</a>
+        <a href="/blog">Blog</a>
         <a href="#contact">Contact</a>
       </nav>
       <div class="vp-header-meta">
@@ -94,7 +155,11 @@
             <aside class="vp-hero-right">
               <img
                 src="/assets/priyanshu-portrait.png"
-                alt="Priyanshu Singh"
+                alt="Portrait of Priyanshu Singh"
+                width="720"
+                height="900"
+                fetchpriority="high"
+                decoding="async"
                 class="vp-portrait-cutout" />
             </aside>
           </div>
@@ -193,7 +258,7 @@
             </div>
 
             <div class="vp-about-col vp-about-col--image">
-              <img class="vp-about-portrait" src="/assets/priyanshu-about.png" alt="Priyanshu Singh portrait" />
+              <img class="vp-about-portrait" src="/assets/priyanshu-about.png" alt="Priyanshu Singh — second portrait" loading="lazy" decoding="async" />
             </div>
 
             <div class="vp-about-col vp-about-col--right">
@@ -297,7 +362,7 @@
               <p class="vp-co-one">LinkedIn outbound automation, positioned as the safest. Built for operators running cold outbound at volume without burning sender reputation.</p>
               <div class="vp-co-actions">
                 <span class="vp-co-domain">arksend.com</span>
-                <a class="vp-co-visit" href="#" target="_blank" rel="noopener">Visit <span class="vp-co-visit-arrow">↗</span></a>
+                <a class="vp-co-visit" href="https://arksend.com" target="_blank" rel="noopener">Visit <span class="vp-co-visit-arrow">↗</span></a>
               </div>
             </article>
 
@@ -980,7 +1045,7 @@
           <a href="#companies">Companies</a>
           <a href="#gallery">Gallery</a>
           <a href="#letters">Letters</a>
-          <a href="/blog">Writing</a>
+          <a href="/blog">Blog</a>
           <a href="#testimonials">Testimonials</a>
           <a href="#employee">Employee</a>
           <a href="#youtube">YouTube</a>
@@ -1028,7 +1093,7 @@
       <a href="#about">About</a>
       <a href="#companies">Companies</a>
       <a href="#letters">Credentials</a>
-      <a href="/blog">Writing</a>
+      <a href="/blog">Blog</a>
       <a href="#contact">Contact</a>
     </nav>
     <div class="vp-drawer-socials" aria-label="Social media">

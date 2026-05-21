@@ -1,0 +1,195 @@
+---
+import BlogLayout from '../layouts/BlogLayout.astro';
+
+type Publication = {
+  slug: string;
+  title: string;
+  description: string;
+  venue: string;
+  date: Date;
+  tags: string[];
+  cover: string;
+  status: 'coming_soon' | 'available';
+  url?: string;
+};
+
+const publications: Publication[] = [
+  {
+    slug: 'capital-formation-emerging-markets',
+    title: 'Capital formation in emerging markets',
+    description: 'A look at how cross-border capital is reorganising itself between London, Dubai, and Mumbai post-2024.',
+    venue: 'Working paper',
+    date: new Date('2026-04-01'),
+    tags: ['Capital', 'Macro'],
+    cover: 'linear-gradient(135deg, #1a1a1a 0%, #3a2a1a 100%)',
+    status: 'coming_soon',
+  },
+  {
+    slug: 'pipeline-economics-of-bd',
+    title: 'The pipeline economics of business development',
+    description: 'Why outbound is the most under-priced asset on a startup balance sheet.',
+    venue: 'Working paper',
+    date: new Date('2026-03-15'),
+    tags: ['Pipeline', 'GTM'],
+    cover: 'linear-gradient(135deg, #2a1a2a 0%, #4a1a2a 100%)',
+    status: 'coming_soon',
+  },
+  {
+    slug: 'operating-across-three-time-zones',
+    title: 'Operating a company across three time zones',
+    description: 'Notes on the LDN / DXB / BOM operating model — staffing, decision rights, and ceremony.',
+    venue: 'Working paper',
+    date: new Date('2026-02-20'),
+    tags: ['Operating'],
+    cover: 'linear-gradient(135deg, #1a2a2a 0%, #1a3a3a 100%)',
+    status: 'coming_soon',
+  },
+  {
+    slug: 'sample-published-paper-one',
+    title: 'Sample published paper title one',
+    description: 'Placeholder description — replace with the real abstract when the paper goes live.',
+    venue: 'Sample Journal',
+    date: new Date('2025-11-10'),
+    tags: ['Sample'],
+    cover: 'linear-gradient(135deg, #2a2a1a 0%, #3a3a1a 100%)',
+    status: 'available',
+    url: '#',
+  },
+  {
+    slug: 'sample-published-paper-two',
+    title: 'Sample published paper title two',
+    description: 'Placeholder description — swap in the real abstract once the publication is live.',
+    venue: 'Sample Journal',
+    date: new Date('2025-08-04'),
+    tags: ['Sample'],
+    cover: 'linear-gradient(135deg, #1a1a2a 0%, #1a2a4a 100%)',
+    status: 'available',
+    url: '#',
+  },
+  {
+    slug: 'sample-published-paper-three',
+    title: 'Sample published paper title three',
+    description: 'Placeholder description — to be replaced with the live publication details.',
+    venue: 'Sample Journal',
+    date: new Date('2025-05-22'),
+    tags: ['Sample'],
+    cover: 'linear-gradient(135deg, #2a1a1a 0%, #4a2a1a 100%)',
+    status: 'available',
+    url: '#',
+  },
+];
+
+const sorted = [...publications].sort((a, b) => b.date.valueOf() - a.date.valueOf());
+const fmt = new Intl.DateTimeFormat('en-GB', { year: 'numeric', month: 'short', day: '2-digit' });
+
+const SITE_URL = 'https://vasprisin.com';
+const pageUrl = `${SITE_URL}/publications`;
+
+const collectionJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: 'Publications — Priyanshu Singh',
+  description: 'Research papers and publications by Priyanshu Singh on capital, pipeline, and operating.',
+  url: pageUrl,
+  author: { '@type': 'Person', name: 'Priyanshu Singh', url: SITE_URL },
+  hasPart: sorted.map((p) => ({
+    '@type': 'CreativeWork',
+    name: p.title,
+    description: p.description,
+    datePublished: p.date.toISOString(),
+    creativeWorkStatus: p.status === 'coming_soon' ? 'Draft' : 'Published',
+    keywords: p.tags.join(', '),
+    url: p.url ? (p.url.startsWith('http') ? p.url : `${pageUrl}#${p.slug}`) : `${pageUrl}#${p.slug}`,
+  })),
+};
+
+const breadcrumbJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_URL + '/' },
+    { '@type': 'ListItem', position: 2, name: 'Publications', item: pageUrl },
+  ],
+};
+
+const graphJsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [collectionJsonLd, breadcrumbJsonLd],
+};
+---
+<BlogLayout
+  title="Publications — Priyanshu Singh"
+  description="Research papers and publications by Priyanshu Singh on capital, pipeline, and operating."
+  canonical={pageUrl}
+  ogType="website"
+  jsonLd={graphJsonLd}>
+
+  <section class="vp-band vp-band--light">
+    <div class="vp-band-inner">
+      <section class="vp-section vp-blog-shell">
+
+        <div class="vp-section-head">
+          <h1 class="vp-section-title">Publications &amp; <em>research.</em></h1>
+        </div>
+
+        <div class="vp-blog-grid">
+
+          <aside class="vp-blog-side" aria-label="All publications">
+            <div class="vp-blog-side-label">Index</div>
+            <ol class="vp-blog-side-list">
+              {sorted.map((p, i) => (
+                <li class="vp-blog-side-item">
+                  <a href={p.status === 'available' ? (p.url ?? `#${p.slug}`) : `#${p.slug}`}>
+                    <span class="vp-blog-side-num">{String(i + 1).padStart(2, '0')}</span>
+                    <span class="vp-blog-side-title">{p.title}</span>
+                    <span class="vp-blog-side-date">{fmt.format(p.date)}</span>
+                  </a>
+                </li>
+              ))}
+            </ol>
+          </aside>
+
+          <div class="vp-pub-feed">
+            {sorted.map((p, i) => {
+              const isComing = p.status === 'coming_soon';
+              return (
+                <article id={p.slug} class={`vp-pub-card ${isComing ? 'is-comingsoon' : ''}`}>
+                  <div class="vp-pub-cover" style={`background-image: ${p.cover};`}>
+                    {isComing && <span class="vp-pub-coming-badge">Coming soon</span>}
+                  </div>
+                  <div class="vp-pub-body">
+                    <div class="vp-blog-card-meta">
+                      <span class="vp-blog-card-num">{String(i + 1).padStart(2, '0')}</span>
+                      <span class="vp-blog-card-sep">—</span>
+                      <time datetime={p.date.toISOString()}>{fmt.format(p.date)}</time>
+                      <span class="vp-blog-card-sep">·</span>
+                      <span>{p.venue}</span>
+                    </div>
+                    <h2 class="vp-blog-card-title">{p.title}</h2>
+                    <p class="vp-blog-card-desc">{p.description}</p>
+                    <div class="vp-blog-card-foot">
+                      {p.tags.length > 0 && (
+                        <span class="vp-blog-card-tags">
+                          {p.tags.map((t) => <span class="vp-blog-tag">{t}</span>)}
+                        </span>
+                      )}
+                      {isComing ? (
+                        <span class="vp-pub-read is-disabled" aria-disabled="true">Coming soon</span>
+                      ) : (
+                        <a class="vp-pub-read" href={p.url ?? '#'}>
+                          Read <span aria-hidden="true">→</span>
+                        </a>
+                      )}
+                    </div>
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+
+        </div>
+      </section>
+    </div>
+  </section>
+
+</BlogLayout>

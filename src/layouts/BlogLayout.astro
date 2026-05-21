@@ -4,9 +4,28 @@ interface Props {
   description: string;
   canonical?: string;
   ogImage?: string;
+  ogType?: 'website' | 'article';
+  jsonLd?: unknown;
+  articleMeta?: {
+    publishedTime?: string;
+    author?: string;
+    tags?: string[];
+  };
 }
 
-const { title, description, canonical, ogImage = '/assets/priyanshu-portrait.png' } = Astro.props;
+const SITE_URL = 'https://vasprisin.com';
+const {
+  title,
+  description,
+  canonical,
+  ogImage = '/assets/priyanshu-portrait.png',
+  ogType = 'website',
+  jsonLd,
+  articleMeta,
+} = Astro.props;
+
+const canonicalUrl = canonical ?? new URL(Astro.url.pathname, SITE_URL).toString();
+const absoluteOgImage = ogImage.startsWith('http') ? ogImage : new URL(ogImage, SITE_URL).toString();
 ---
 <!doctype html>
 <html lang="en">
@@ -15,16 +34,36 @@ const { title, description, canonical, ogImage = '/assets/priyanshu-portrait.png
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>{title}</title>
   <meta name="description" content={description} />
-  {canonical && <link rel="canonical" href={canonical} />}
+  <link rel="canonical" href={canonicalUrl} />
 
   <meta property="og:title" content={title} />
   <meta property="og:description" content={description} />
-  <meta property="og:image" content={ogImage} />
-  <meta property="og:type" content="article" />
+  <meta property="og:image" content={absoluteOgImage} />
+  <meta property="og:image:alt" content="Priyanshu Singh — vasprisin" />
+  <meta property="og:url" content={canonicalUrl} />
+  <meta property="og:type" content={ogType} />
+  <meta property="og:site_name" content="vasprisin" />
+  <meta property="og:locale" content="en_GB" />
+  {articleMeta?.publishedTime && <meta property="article:published_time" content={articleMeta.publishedTime} />}
+  {articleMeta?.author && <meta property="article:author" content={articleMeta.author} />}
+  {articleMeta?.tags?.map((t) => <meta property="article:tag" content={t} />)}
+
   <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={title} />
+  <meta name="twitter:description" content={description} />
+  <meta name="twitter:image" content={absoluteOgImage} />
+  <meta name="twitter:creator" content="@vasprisin" />
+  <meta name="twitter:site" content="@vasprisin" />
+
+  <meta name="author" content="Priyanshu Singh" />
+  <meta name="theme-color" content="#0f0f0f" />
 
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="icon" type="image/png" sizes="256x256" href="/favicon-256.png" />
   <link rel="icon" href="/favicon.ico" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+  <link rel="alternate" type="application/rss+xml" title="vasprisin — Writing" href="/rss.xml" />
+  <link rel="sitemap" type="application/xml" href="/sitemap-index.xml" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -34,6 +73,8 @@ const { title, description, canonical, ogImage = '/assets/priyanshu-portrait.png
 
   <link rel="stylesheet" href="/colors_and_type.css" />
   <link rel="stylesheet" href="/site.css" />
+
+  {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
 </head>
 <body>
 
@@ -51,7 +92,7 @@ const { title, description, canonical, ogImage = '/assets/priyanshu-portrait.png
         <a href="/#about">About</a>
         <a href="/#companies">Companies</a>
         <a href="/#letters">Credentials</a>
-        <a href="/blog">Writing</a>
+        <a href="/blog">Blog</a>
         <a href="/#contact">Contact</a>
       </nav>
       <div class="vp-header-meta">
@@ -134,7 +175,7 @@ const { title, description, canonical, ogImage = '/assets/priyanshu-portrait.png
           <a href="/#companies">Companies</a>
           <a href="/#gallery">Gallery</a>
           <a href="/#letters">Letters</a>
-          <a href="/blog">Writing</a>
+          <a href="/blog">Blog</a>
           <a href="/#testimonials">Testimonials</a>
           <a href="/#contact">Contact</a>
         </div>
@@ -156,7 +197,7 @@ const { title, description, canonical, ogImage = '/assets/priyanshu-portrait.png
       <a href="/#about">About</a>
       <a href="/#companies">Companies</a>
       <a href="/#letters">Credentials</a>
-      <a href="/blog">Writing</a>
+      <a href="/blog">Blog</a>
       <a href="/#contact">Contact</a>
     </nav>
     <a class="vp-drawer-logo" href="/"><em>vasprisin</em></a>

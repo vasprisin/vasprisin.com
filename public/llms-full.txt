@@ -1,0 +1,190 @@
+# Priyanshu Singh
+
+> Priyanshu Singh (vasprisin) is a 22-year-old founder and operator based across London, Dubai, and Mumbai. He runs ventures at the intersection of capital, pipeline, and operating — most notably Dolta (high-ticket B2B lead generation) and Capital Hunt (investor intelligence). His team has generated $22M+ in client revenue, 148K+ leads, and $8M+ in capital raised for startups.
+
+## Background
+
+Priyanshu Singh started selling things in India as a kid (lemonade, massages, even social media followers from the age of 12). That early obsession with sales turned into building companies focused on helping businesses grow faster.
+
+Over the past few years he has worked with founders, funds, and growth teams across multiple industries, helping them generate pipeline, close clients, and access investors. Along the way he has met hundreds of industry leaders, spoken on podcasts, attended dozens of events, and been invited to the House of Lords.
+
+He helps companies:
+- Raise capital through Capital Hunt.
+- Acquire clients and scale outbound through Dolta.
+- Build and experiment with GTM and data SaaS tools.
+
+Today he works at the intersection of capital, growth, and automation.
+
+Highlight numbers:
+- $22M+ in revenue generated for clients
+- 148K+ leads generated
+- 200+ B2B engagements
+- 3M/month email sending infrastructure
+- 3,000 LinkedIn accounts under management
+- $8M+ institutional capital flow
+- 10 active ventures
+- 22 years old
+
+Some results his team has delivered:
+- 300+ active clients
+- 150k+ leads generated
+- 100k+ LinkedIn event registrations
+- $22M+ pipeline generated for clients
+- $8M+ capital raised for startups
+- Built a team from 0 to 28 people in under 2 years, now leaner with AI
+
+Personal achievements include district-level boxing (3rd) and rope-jumping (3rd), 11th in district chess, 98th percentile in the national ASSET assessment (math and science), growing Dolta from 0 to 12 team members and 100+ clients by age 17, semi-finalist at Mr. Pune Teens, University Sports Captain, and School Vice Captain.
+
+## Ventures
+
+### Dolta — https://dolta.io
+High-ticket B2B lead generation and LinkedIn agency. Outbound infrastructure for crypto institutions, family offices, and funded B2B.
+
+### Capital Hunt — https://capitalhunt.io
+The investor-intelligence layer for the next decade. Three sides — investors, founders, advisors. Central priority for the next twelve months.
+
+### Goaccounts — https://goaccounts.ai
+LinkedIn account procurement and rental. 3,000+ accounts under management. The infrastructure layer beneath Arksend and Dolta outbound.
+
+### Arksend — https://arksend.com
+LinkedIn outbound automation, positioned as the safest. Built for operators running cold outbound at volume without burning sender reputation.
+
+### Data Pimp — https://datapimp.io
+B2B leads dataset built on BigQuery. ZoomInfo plus LinkedIn master table. The single source feeding every outbound campaign across the group. 315M+ records.
+
+### Goenrich — https://goenrich.cfd
+B2B data enrichment API on top of Data Pimp. Sold to agencies and revenue-ops teams who don't want to manage a warehouse.
+
+### Gosites — https://gosites.uk
+AI-powered web design. Sites at agency quality, agency-fast. The studio that ships group marketing pages overnight.
+
+### Fine City Club — https://tfcc.space
+Invite-only WhatsApp founder community. Operators and executives across London, Dubai, and Mumbai. Curated, not scaled.
+
+### Anka's — https://ankas.in
+Luxury cake café in Pune. Family-owned, single store, multi-generational.
+
+## Writing
+
+### How I think about pipeline
+URL: https://vasprisin.com/blog/how-i-think-about-pipeline
+Published: 2026-05-12
+Tags: GTM, outbound, dolta
+Description: Pipeline is not a marketing problem. It's an inventory problem. Here's the mental model I run inside every business I touch.
+
+Most founders treat pipeline like marketing. They run campaigns, hire SDRs, and hope something sticks. The ones who scale treat pipeline like inventory.
+
+#### The shift in framing
+
+When you treat pipeline as inventory, three things change.
+
+First, you start counting. How many qualified accounts entered the funnel this week? How many moved to the next stage? What's the value of stage-three opportunities versus last month? You can't fix what you can't see.
+
+Second, you stop romanticizing the channel. LinkedIn, email, paid, events — they're all just inputs into the same warehouse. Some are cheaper per unit. Some have shorter lead times. None are sacred.
+
+Third, you build for replenishment, not for spikes. A campaign-driven business is one bad month from collapse. A pipeline-as-inventory business has a constant, predictable replenishment rhythm.
+
+#### What this looks like at Dolta
+
+Inside Dolta, we run three layers:
+
+1. Sourcing — the dataset. 315M+ records on Data Pimp. This is the warehouse.
+2. Pipelining — outbound infra. 3,000 LinkedIn accounts on Goaccounts. Email infra at 3M sends/month. This is the conveyor belt.
+3. Conversion — the human layer. AEs, calls, follow-up. This is the storefront.
+
+Each layer has its own metrics, its own owner, and its own SLA. The minute you blur them, things stop working.
+
+#### The lesson
+
+If you're a founder reading this and your pipeline feels lumpy — you don't have a marketing problem. You have an inventory problem. Fix the warehouse first.
+
+---
+
+### Raising capital as an outsider
+URL: https://vasprisin.com/blog/raising-capital-as-an-outsider
+Published: 2026-04-28
+Tags: capital, fundraising, capitalhunt
+Description: I'm 22, Indian, and didn't go to Stanford. Here's what actually moves investors when none of the usual signals are on your side.
+
+I started Capital Hunt because the capital-raising market is broken for everyone who isn't already inside it.
+
+#### The signal game
+
+Most early-stage capital flows on signal. Where you went to school, who introduced you, what your last company sold for. None of that is a sin — investors are pricing risk, and signal is a fast proxy for it.
+
+The problem is that signal compounds. The kid with the right last name gets the warm intro, raises faster, recruits better, and ten years later he's the one writing checks to other kids with the right last names.
+
+If you're outside that loop, you have to build manufactured signal.
+
+#### Three things that actually work
+
+1. Distribution before the round. Build an audience that investors already follow. When you announce, they should feel late. Twitter, LinkedIn, a podcast — the channel doesn't matter, the asymmetry does.
+
+2. A founder-thesis match. Don't pitch generalists. Find the five investors in the world who have an active thesis on your space and go deep on those five. A warm "no" from the right person beats a cold maybe from twenty.
+
+3. Show velocity. Update investors weekly during the raise, not monthly. Every update should show something moved — a new customer, a new hire, a new milestone. Velocity creates urgency. Urgency closes rounds.
+
+#### What Capital Hunt is solving
+
+Capital Hunt is the index of every active investor, sorted by thesis, stage, and velocity. The platform Indians, Africans, and second-time founders should have had a decade ago. We're building it.
+
+If you're raising and you don't have a warm-intro graph, that's not a death sentence. It just means your raise is going to be a marketing problem disguised as a finance problem. Treat it that way and you'll close.
+
+---
+
+### Notes from London, Dubai, and Mumbai
+URL: https://vasprisin.com/blog/notes-from-london-dubai-mumbai
+Published: 2026-03-15
+Tags: travel, operations, geography
+Description: Three cities, three economies, three completely different operating systems. A field guide for founders deciding where to base.
+
+I spend my year between London, Dubai, and Mumbai. People keep asking which city is "best" for a founder. The honest answer: it depends what you're optimizing for. Each city is a different operating system.
+
+#### London — credibility
+
+London buys you legitimacy. The institutions are old, the regulators are taken seriously, and a British address on a deck still moves the needle with LPs in Singapore, the Gulf, and the US.
+
+The trade-off is friction. Banking takes weeks. Hiring takes months. The culture defaults to cautious. London rewards the founder who plays the long, institutional game — not the one trying to move fast.
+
+Best for: regulated businesses, capital-heavy plays, anything where trust beats speed.
+
+#### Dubai — leverage
+
+Dubai is the closest thing to a sandbox in the developed world. Capital is loose, regulation is light, and decisions get made over coffee. You can incorporate in a week, hire from 90 countries, and meet a family office at brunch.
+
+The trade-off is depth. The senior talent pool is thinner than London or New York. The customer base is largely transient. Dubai rewards the founder running a global, asset-light business — not one trying to build a 500-person engineering org.
+
+Best for: capital allocation, holdco structures, sales-led businesses with global customers.
+
+#### Mumbai — velocity
+
+Mumbai is execution speed. The talent is cheap, the hunger is real, and the same dollar that hires one mid-level engineer in London hires three in Mumbai. The market itself is enormous and underserved.
+
+The trade-off is infrastructure. Power cuts, paperwork, payment rails that still rely on bank holidays. Mumbai rewards the founder who has the operating muscle to absorb that friction — and who recognizes that India in 2026 is the fastest-growing consumer market on earth.
+
+Best for: engineering teams, services businesses, anything where unit economics matter more than gloss.
+
+#### My setup
+
+I run capital and credibility out of London. I run the holdco out of Dubai. I run the team out of Mumbai. Each city does what it's best at. Nothing competes with anything.
+
+If you're trying to do all three in one city, you're going to lose to whoever stops pretending and triangulates.
+
+## Publications
+
+Working papers (forthcoming) and published research:
+
+- Capital formation in emerging markets — working paper, forthcoming. A look at how cross-border capital is reorganising itself between London, Dubai, and Mumbai post-2024.
+- The pipeline economics of business development — working paper, forthcoming. Why outbound is the most under-priced asset on a startup balance sheet.
+- Operating a company across three time zones — working paper, forthcoming. Notes on the LDN / DXB / BOM operating model — staffing, decision rights, and ceremony.
+
+Publications page: https://vasprisin.com/publications
+
+## Contact
+
+- Email: vp@vasprisin.com
+- LinkedIn: https://linkedin.com/in/vasprisin
+- X / Twitter: https://x.com/vasprisin
+- Instagram: https://instagram.com/vasprisin
+- YouTube: https://youtube.com/@vasprisin28
+- GitHub: https://github.com/vasprisin

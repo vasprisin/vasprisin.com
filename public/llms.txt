@@ -1,0 +1,46 @@
+# Priyanshu Singh
+
+> Priyanshu Singh (vasprisin) is a 22-year-old founder and operator based across London, Dubai, and Mumbai. He runs ventures at the intersection of capital, pipeline, and operating — most notably Dolta (high-ticket B2B lead generation) and Capital Hunt (investor intelligence). His team has generated $22M+ in client revenue, 148K+ leads, and $8M+ in capital raised for startups.
+
+## Background
+
+- [Home page](https://vasprisin.com/): full biography, ventures, results, achievements, letters of recommendation, testimonials, and contact form.
+- [About section](https://vasprisin.com/#about): early sales background in India, current focus on capital and pipeline, results delivered by his team.
+- [Achievements](https://vasprisin.com/#achievements): district-level sports, national ASSET 98th percentile, business and academic milestones.
+- [Letters of recommendation](https://vasprisin.com/#letters): PDF letters from universities, industry operators, and government-adjacent figures.
+
+## Ventures
+
+- [Dolta](https://dolta.io): high-ticket B2B lead generation and LinkedIn agency. Outbound infrastructure for crypto institutions, family offices, and funded B2B.
+- [Capital Hunt](https://capitalhunt.io): investor intelligence platform. Three sides — investors, founders, advisors. Current central priority.
+- [Goaccounts](https://goaccounts.ai): LinkedIn account procurement and rental. 3,000+ accounts under management.
+- [Arksend](https://arksend.com): LinkedIn outbound automation, positioned as the safest for high-volume cold outbound.
+- [Data Pimp](https://datapimp.io): B2B leads dataset on BigQuery. ZoomInfo plus LinkedIn master table feeding every group campaign.
+- [Goenrich](https://goenrich.cfd): B2B data enrichment API on top of Data Pimp.
+- [Gosites](https://gosites.uk): AI-powered web design studio.
+- [Fine City Club](https://tfcc.space): invite-only WhatsApp founder community across London, Dubai, Mumbai.
+- [Anka's](https://ankas.in): family-owned luxury cake café in Pune.
+
+## Writing
+
+Notes on capital, pipeline, and operating across LDN / DXB / BOM.
+
+- [Blog index](https://vasprisin.com/blog)
+- [How I think about pipeline](https://vasprisin.com/blog/how-i-think-about-pipeline): pipeline as an inventory problem, not a marketing problem.
+- [Raising capital as an outsider](https://vasprisin.com/blog/raising-capital-as-an-outsider): what moves investors when none of the usual signals (age, geography, school) are on your side.
+- [Notes from London, Dubai, and Mumbai](https://vasprisin.com/blog/notes-from-london-dubai-mumbai): a field guide for founders deciding where to base.
+- [RSS feed](https://vasprisin.com/rss.xml)
+
+## Publications
+
+- [Publications page](https://vasprisin.com/publications): working papers and forthcoming research on capital formation, pipeline economics, and operating across three time zones.
+
+## Contact
+
+- Email: vp@vasprisin.com
+- LinkedIn: https://linkedin.com/in/vasprisin
+- X / Twitter: https://x.com/vasprisin
+- Instagram: https://instagram.com/vasprisin
+- YouTube: https://youtube.com/@vasprisin28
+- GitHub: https://github.com/vasprisin
+- Full content for AI ingestion: [llms-full.txt](https://vasprisin.com/llms-full.txt)

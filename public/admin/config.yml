@@ -1,0 +1,70 @@
+# Decap CMS configuration for vasprisin.com
+# Docs: https://decapcms.org/docs/
+#
+# Default backend: Netlify Identity + Git Gateway (easiest production path).
+# To switch backends, comment out the active block below and uncomment the
+# alternate you want. Only one `backend:` block may be active at a time.
+
+# --- ACTIVE BACKEND: Git Gateway (Netlify Identity) ---
+backend:
+  name: git-gateway
+  branch: main
+
+# --- ALTERNATE BACKEND 1: GitHub OAuth ---
+# Requires a GitHub OAuth app and an OAuth proxy (Netlify provides one for free).
+# Replace the active backend above with this block to use it.
+#
+# backend:
+#   name: github
+#   repo: vasprisin/vasprisin.com
+#   branch: main
+#   # Optional: self-hosted OAuth proxy. Defaults to Netlify's hosted OAuth.
+#   # base_url: https://your-oauth-proxy.example.com
+
+# --- ALTERNATE BACKEND 2: Local proxy (no auth, for local dev) ---
+# Run `npx decap-server` in a separate terminal (listens on port 8081).
+# Then visit http://localhost:5000/admin/. Posts save straight to disk.
+#
+# backend:
+#   name: proxy
+#   proxy_url: http://localhost:8081/api/v1
+#   branch: main
+
+# Editorial workflow gives a draft / in-review / ready kanban (Webflow-like).
+publish_mode: editorial_workflow
+
+# Media uploads land in public/uploads/ and are served from /uploads/.
+media_folder: "public/uploads"
+public_folder: "/uploads"
+
+site_url: https://vasprisin.com
+display_url: https://vasprisin.com
+logo_url: https://vasprisin.com/favicon.svg
+
+collections:
+  - name: "blog"
+    label: "Blog"
+    label_singular: "Post"
+    folder: "src/content/blog"
+    create: true
+    slug: "{{slug}}"
+    extension: "md"
+    format: "frontmatter"
+    summary: "{{title}} — {{date | date('YYYY-MM-DD')}}"
+    sortable_fields: ["date", "title"]
+    view_filters:
+      - label: "Drafts"
+        field: "draft"
+        pattern: true
+      - label: "Published"
+        field: "draft"
+        pattern: false
+    fields:
+      - { label: "Title", name: "title", widget: "string", required: true }
+      - { label: "Description", name: "description", widget: "text", required: true, hint: "Shown in post lists and as the meta description for SEO." }
+      - { label: "Date", name: "date", widget: "datetime", required: true, default: "", picker_utc: false }
+      - { label: "Author", name: "author", widget: "string", default: "Priyanshu Singh", required: false }
+      - { label: "Tags", name: "tags", widget: "list", required: false, default: [], hint: "Comma-separated list of tags." }
+      - { label: "Cover image", name: "cover", widget: "image", required: false, media_folder: "/public/uploads", public_folder: "/uploads", hint: "Optional hero image for the post." }
+      - { label: "Draft", name: "draft", widget: "boolean", default: false, required: false, hint: "Drafts are excluded from the site build." }
+      - { label: "Body", name: "body", widget: "markdown" }

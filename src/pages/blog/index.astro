@@ -2,31 +2,44 @@
 import { getCollection } from 'astro:content';
 import BlogLayout from '../../layouts/BlogLayout.astro';
 
+const SITE_URL = 'https://vasprisin.com';
+
 const posts = (await getCollection('blog', ({ data }) => !data.draft))
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 
 const fmt = new Intl.DateTimeFormat('en-GB', { year: 'numeric', month: 'short', day: '2-digit' });
+
+const blogJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Blog',
+  name: 'vasprisin — Writing',
+  description: 'Notes on capital, pipeline, and operating across London, Dubai, and Mumbai. By Priyanshu Singh.',
+  url: `${SITE_URL}/blog`,
+  author: { '@type': 'Person', name: 'Priyanshu Singh', url: SITE_URL },
+  blogPost: posts.map((p) => ({
+    '@type': 'BlogPosting',
+    headline: p.data.title,
+    description: p.data.description,
+    datePublished: p.data.date.toISOString(),
+    url: `${SITE_URL}/blog/${p.id}`,
+    author: { '@type': 'Person', name: p.data.author },
+    keywords: p.data.tags.join(', '),
+  })),
+};
 ---
 <BlogLayout
-  title="Writing — Priyanshu Singh"
-  description="Essays on capital, pipeline, and operating across London, Dubai, and Mumbai. By Priyanshu Singh."
-  canonical="https://vasprisin.com/blog">
+  title="Blog — Priyanshu Singh"
+  description="Notes on capital, pipeline, and operating across London, Dubai, and Mumbai. By Priyanshu Singh."
+  canonical={`${SITE_URL}/blog`}
+  ogType="website"
+  jsonLd={blogJsonLd}>
 
   <section class="vp-band vp-band--light">
     <div class="vp-band-inner">
       <section class="vp-section vp-blog-shell">
 
         <div class="vp-section-head">
-          <div class="vp-eyebrow">
-            <span class="vp-eyebrow-num">★</span>
-            <span class="vp-eyebrow-sep">—</span>
-            <span>Writing</span>
-          </div>
           <h1 class="vp-section-title">Notes on <em>capital, pipeline, and operating.</em></h1>
-          <p class="vp-section-lede">
-            Essays from <em>Priyanshu Singh</em> &mdash; founder of Dolta and Capital Hunt.
-            Written from London, Dubai, and Mumbai.
-          </p>
         </div>
 
         <div class="vp-blog-grid">
@@ -83,7 +96,7 @@ const fmt = new Intl.DateTimeFormat('en-GB', { year: 'numeric', month: 'short', 
                   <span class="vp-eyebrow-sep">—</span>
                   <span>Newsletter</span>
                 </div>
-                <h3 class="vp-news-inline-title">Get new essays by <em>email.</em></h3>
+                <h3 class="vp-news-inline-title">Get new posts by <em>email.</em></h3>
                 <p>One short note a week. Capital, pipeline, operating. No spam.</p>
               </div>
               <form class="vp-news-inline-form" onsubmit="event.preventDefault(); this.querySelector('.vp-news-meta').textContent='Thanks — you\\'re on the list.'; this.querySelector('button').textContent='Done';">

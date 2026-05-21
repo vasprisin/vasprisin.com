@@ -3072,6 +3072,78 @@ body.vp-no-scroll { overflow: hidden; }
 }
 .vp-blog-card-read:hover { color: var(--accent-700); border-bottom-color: var(--accent-700); }
 
+/* ---------- Publications feed (image cards) ---------- */
+.vp-pub-feed {
+  display: flex;
+  flex-direction: column;
+  gap: 56px;
+}
+
+.vp-pub-card {
+  display: flex;
+  flex-direction: column;
+  background: var(--paper-100, #fff);
+  border: 1px solid var(--rule-soft);
+  border-radius: var(--r-md, 8px);
+  overflow: hidden;
+  transition: border-color var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-out);
+}
+.vp-pub-card:hover { border-color: var(--ink-700); }
+
+.vp-pub-cover {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  width: 100%;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.vp-pub-coming-badge {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 6px 10px;
+  background: rgba(0, 0, 0, 0.78);
+  color: var(--paper-100, #fff);
+  border-radius: var(--r-xs, 4px);
+}
+
+.vp-pub-body {
+  padding: 24px 26px 26px;
+}
+
+.vp-pub-card.is-comingsoon .vp-pub-cover { filter: grayscale(0.4) brightness(0.85); }
+.vp-pub-card.is-comingsoon .vp-pub-body { opacity: 0.78; }
+
+.vp-pub-read {
+  font-family: var(--font-mono);
+  font-size: var(--t-caption);
+  text-transform: uppercase;
+  letter-spacing: var(--tr-caption);
+  text-decoration: none;
+  color: var(--fg);
+  border-bottom: 1px solid var(--ink-900);
+  padding-bottom: 2px;
+  transition: gap var(--dur-fast) var(--ease-out);
+}
+.vp-pub-read:hover { color: var(--accent-700); border-bottom-color: var(--accent-700); }
+.vp-pub-read.is-disabled {
+  color: var(--fg-muted);
+  border-bottom-color: var(--fg-muted);
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+@media (max-width: 720px) {
+  .vp-pub-feed { gap: 36px; }
+  .vp-pub-body { padding: 18px 18px 20px; }
+}
+
 /* ---------- Individual post article ---------- */
 .vp-blog-article-head {
   padding-bottom: 32px;
@@ -3437,3 +3509,72 @@ body.vp-no-scroll { overflow: hidden; }
   .vp-blog-shell.vp-reveal { opacity: 1; transform: none; transition: none; }
   .vp-popup, .vp-popup-backdrop { transition: none; }
 }
+
+/* ============================================================
+   A11Y + MOBILE POLISH — appended 2026-05-21
+   Focus-visible outlines, larger touch targets, no horizontal scroll.
+   ============================================================ */
+
+/* Keyboard focus — WCAG-AA-friendly, never on mouse click */
+:where(a, button, input, select, textarea, [tabindex]):focus-visible {
+  outline: 2px solid var(--accent-700, #b04412);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+.vp-band--dark :where(a, button, input, select, textarea, [tabindex]):focus-visible {
+  outline-color: var(--paper-50, #f5f1e8);
+}
+
+/* Prevent horizontal scroll at any breakpoint */
+html, body { overflow-x: hidden; max-width: 100vw; }
+
+/* Touch targets ≥ 44×44 on mobile (and pointer:coarse devices) */
+@media (max-width: 900px), (pointer: coarse) {
+  .vp-social,
+  .vp-drawer-social,
+  .vp-header-social {
+    width: 44px;
+    height: 44px;
+  }
+  .vp-drawer-close,
+  .vp-popup-close {
+    width: 44px;
+    height: 44px;
+    font-size: 24px;
+  }
+  .vp-menu-btn {
+    width: 44px;
+    height: 44px;
+  }
+  .vp-drawer-nav a { padding: 12px 0; }
+  .vp-nav a { padding: 10px 4px; }
+  .vp-footer-col a { padding: 6px 0; display: inline-block; }
+  .vp-blog-side-item a { padding: 16px 0; }
+  .vp-blog-card-read,
+  .vp-pub-read { padding: 8px 0; display: inline-block; }
+  .vp-co-visit { min-height: 44px; }
+  /* Anchor pill on hero */
+  .vp-hero-pill { min-height: 44px; }
+}
+
+/* Sidebar PDF iframes don't behave on touch — make them a tappable preview */
+@media (pointer: coarse) {
+  .vp-lor-pdf-frame iframe { pointer-events: none; }
+}
+
+/* Newsletter inline + popup form usability at narrow widths */
+@media (max-width: 560px) {
+  .vp-news-inline-form .vp-btn-submit,
+  .vp-popup-submit { width: 100%; justify-content: center; }
+  .vp-news-inline-form .vp-input,
+  .vp-popup-input { font-size: 16px; } /* iOS no-zoom */
+}
+
+/* Long titles + word-wrap safety on cards */
+.vp-blog-card-title a,
+.vp-pub-body h2 { overflow-wrap: anywhere; }
+
+/* Make sure inline forms don't overflow their card on phone */
+.vp-news-card-form,
+.vp-news-inline-form { min-width: 0; max-width: 100%; }
+.vp-input { min-width: 0; max-width: 100%; }
