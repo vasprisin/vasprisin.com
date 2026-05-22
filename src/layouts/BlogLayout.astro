@@ -251,12 +251,22 @@ const absoluteOgImage = ogImage.startsWith('http') ? ogImage : new URL(ogImage, 
     });
   })();
 
-  // reveal-on-scroll
+  // reveal-on-scroll — only off-screen sections fade in; in-viewport sections snap visible.
   (function () {
     var targets = document.querySelectorAll(".vp-section, .vp-blog-shell, .vp-footer");
-    targets.forEach(function (t) { t.classList.add("vp-reveal"); });
-    if (!("IntersectionObserver" in window)) {
-      targets.forEach(function (t) { t.classList.add("is-visible"); });
+    function inView(el) {
+      var r = el.getBoundingClientRect();
+      var vh = window.innerHeight || document.documentElement.clientHeight;
+      return r.top < vh * 0.92 && r.bottom > 0;
+    }
+    var off = [];
+    targets.forEach(function (t) {
+      t.classList.add("vp-reveal");
+      if (inView(t)) t.classList.add("is-visible");
+      else off.push(t);
+    });
+    if (!("IntersectionObserver" in window) || off.length === 0) {
+      off.forEach(function (t) { t.classList.add("is-visible"); });
       return;
     }
     var io = new IntersectionObserver(function (entries) {
@@ -267,14 +277,7 @@ const absoluteOgImage = ogImage.startsWith('http') ? ogImage : new URL(ogImage, 
         }
       });
     }, { rootMargin: "0px 0px -8% 0px", threshold: 0.05 });
-    // Two rAFs guarantee a paint of opacity:0 before is-visible flips it to 1.
-    requestAnimationFrame(function () {
-      requestAnimationFrame(function () {
-        targets.forEach(function (t) {
-          if (!t.classList.contains("is-visible")) io.observe(t);
-        });
-      });
-    });
+    off.forEach(function (t) { io.observe(t); });
   })();
 
   // newsletter exit-intent popup

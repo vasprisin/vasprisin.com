@@ -44,7 +44,11 @@ export const POST: APIRoute = async ({ request }) => {
     return json(400, { ok: false, error: 'A valid email is required.' });
   }
 
-  const fields: Record<string, string> = { Email: email, Source: source };
+  const fields: Record<string, string> = {
+    Email: email,
+    Source: 'vasprisin.com',
+    sub_source: 'form',
+  };
 
   if (source === 'contact') {
     const first = trim(body.first, 100);

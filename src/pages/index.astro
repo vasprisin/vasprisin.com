@@ -960,7 +960,8 @@ const websiteJsonLd = {
                 </div>
                 <div class="vp-field">
                   <label class="vp-field-label" for="f-linkedin">LinkedIn <span style="text-transform:none; letter-spacing:0;">(optional)</span></label>
-                  <input class="vp-input" id="f-linkedin" name="linkedin" type="text" inputmode="url" autocomplete="url" placeholder="linkedin.com/in/yourname" data-vp-linkedin />
+                  <input class="vp-input" id="f-linkedin" name="linkedin" type="text" inputmode="url" autocomplete="url" placeholder="linkedin.com/in/username" aria-describedby="f-linkedin-err" data-vp-linkedin data-vp-linkedin-err-target="f-linkedin-err" />
+                  <div class="vp-field-error" id="f-linkedin-err" role="alert" aria-live="polite"></div>
                 </div>
                 <div class="vp-field">
                   <label class="vp-field-label" for="f-inquiry">Inquiry type</label>
@@ -1109,6 +1110,8 @@ const websiteJsonLd = {
     <a class="vp-drawer-logo" href="#top"><img src="/vasprisin-logo.png" alt="vasprisin" width="800" height="200" /></a>
   </aside>
 
+  <div class="vp-toast" id="vp-toast" role="status" aria-live="polite" aria-atomic="true"></div>
+
 </div>
 
 <script is:inline>
@@ -1175,19 +1178,36 @@ const websiteJsonLd = {
     history.replaceState(null, "", "#" + id);
   });
 
-  // reveal-on-scroll — fade + slight rise as each section enters view
+  // reveal-on-scroll — only off-screen sections fade in on scroll; in-viewport
+  // sections snap to visible immediately so the page doesn't "fade in" on load.
   (function () {
     var sectionTargets = document.querySelectorAll(".vp-section, .vp-hero, .vp-footer");
     var staggerTargets = document.querySelectorAll(".vp-stats-grid, .vp-cos-grid, .vp-gallery-grid, .vp-lor-grid, .vp-client-grid, .vp-emp-grid, .vp-videos-grid, .vp-shorts-row, .vp-ach-grid");
 
-    sectionTargets.forEach(function (t) { t.classList.add("vp-reveal"); });
-    staggerTargets.forEach(function (t) { t.classList.add("vp-stagger"); });
+    function inView(el) {
+      var r = el.getBoundingClientRect();
+      var vh = window.innerHeight || document.documentElement.clientHeight;
+      return r.top < vh * 0.92 && r.bottom > 0;
+    }
 
-    var all = [].concat([].slice.call(sectionTargets), [].slice.call(staggerTargets));
+    // Hero always runs its entrance animation on load.
+    document.querySelectorAll(".vp-hero").forEach(function (h) { h.classList.add("is-visible"); });
 
-    if (!("IntersectionObserver" in window)) {
-      all.forEach(function (t) { t.classList.add("is-visible"); });
-      document.querySelectorAll(".vp-hero").forEach(function (h) { h.classList.add("is-visible"); });
+    var off = [];
+    sectionTargets.forEach(function (t) {
+      t.classList.add("vp-reveal");
+      // Same-tick add of is-visible: no prior paint at opacity:0, so no fade.
+      if (inView(t)) t.classList.add("is-visible");
+      else off.push(t);
+    });
+    staggerTargets.forEach(function (t) {
+      t.classList.add("vp-stagger");
+      if (inView(t)) t.classList.add("is-visible");
+      else off.push(t);
+    });
+
+    if (!("IntersectionObserver" in window) || off.length === 0) {
+      off.forEach(function (t) { t.classList.add("is-visible"); });
       return;
     }
     var io = new IntersectionObserver(function (entries) {
@@ -1199,16 +1219,7 @@ const websiteJsonLd = {
       });
     }, { rootMargin: "0px 0px -8% 0px", threshold: 0.05 });
 
-    // Two rAFs guarantee a paint of opacity:0 before is-visible flips it to 1.
-    // Without this, above-the-fold sections snap to opacity:1 with no visible fade.
-    requestAnimationFrame(function () {
-      requestAnimationFrame(function () {
-        document.querySelectorAll(".vp-hero").forEach(function (h) { h.classList.add("is-visible"); });
-        all.forEach(function (t) {
-          if (!t.classList.contains("is-visible")) io.observe(t);
-        });
-      });
-    });
+    off.forEach(function (t) { io.observe(t); });
   })();
 
   // newsletter exit-intent popup
@@ -1319,8 +1330,9 @@ const websiteJsonLd = {
     init();
   })();
 
-  // LinkedIn field — normalize on blur, validate on submit (optional, but if filled must contain "linkedin")
+  // LinkedIn field — normalize + inline-error on blur (optional, but if filled must contain "linkedin")
   (function () {
+    var ERR_MSG = "Please enter a LinkedIn Profile URL or skip this question.";
     function normalizeLinkedIn(v) {
       v = (v || "").trim();
       if (!v) return "";
@@ -1331,14 +1343,41 @@ const websiteJsonLd = {
       if (/^linkedin\.com/i.test(v)) return "https://www." + v;
       return v;
     }
+    function errEl(input) {
+      var id = input.getAttribute("data-vp-linkedin-err-target");
+      return id ? document.getElementById(id) : null;
+    }
+    function setErr(input, msg) {
+      var el = errEl(input);
+      if (el) { el.textContent = msg || ""; el.classList.toggle("is-shown", !!msg); }
+      input.classList.toggle("is-invalid", !!msg);
+    }
     document.querySelectorAll("[data-vp-linkedin]").forEach(function (input) {
       input.addEventListener("blur", function () {
         var n = normalizeLinkedIn(input.value);
         if (n && n !== input.value) input.value = n;
-        input.setCustomValidity("");
+        var v = (input.value || "").trim();
+        if (v && !/linkedin/i.test(v)) setErr(input, ERR_MSG);
+        else setErr(input, "");
       });
-      input.addEventListener("input", function () { input.setCustomValidity(""); });
+      input.addEventListener("input", function () {
+        // clear error as soon as they start fixing it
+        if (input.classList.contains("is-invalid")) setErr(input, "");
+      });
     });
+  })();
+
+  // bottom-right toast notification
+  window.vpToast = (function () {
+    var el = document.getElementById("vp-toast");
+    var t;
+    return function (msg) {
+      if (!el) return;
+      el.textContent = msg || "";
+      el.classList.add("is-shown");
+      clearTimeout(t);
+      t = setTimeout(function () { el.classList.remove("is-shown"); }, 4200);
+    };
   })();
 
   // wire data-vp-form forms (newsletter + contact) to /api/submit
@@ -1355,16 +1394,19 @@ const websiteJsonLd = {
       return obj;
     }
     function validateContact(form) {
-      // LinkedIn: optional, but if filled must contain "linkedin"
+      // LinkedIn: optional, but if filled must contain "linkedin".
+      // Error shows inline under the field; submit silently focuses if invalid.
       var li = form.querySelector("[data-vp-linkedin]");
       if (li) {
         var v = (li.value || "").trim();
         if (v && !/linkedin/i.test(v)) {
+          var ev = new Event("blur");
+          li.dispatchEvent(ev); // re-fire blur so the inline error renders
           li.focus();
-          return "Please enter a LinkedIn Profile URL or skip this question.";
+          return true; // block submission, but don't put message in form-meta
         }
       }
-      return null;
+      return false;
     }
     document.querySelectorAll("[data-vp-form]").forEach(function (form) {
       var source = form.getAttribute("data-vp-form");
@@ -1375,8 +1417,7 @@ const websiteJsonLd = {
         e.preventDefault();
         if (meta) meta.textContent = "";
         if (source === "contact") {
-          var err = validateContact(form);
-          if (err) { if (meta) meta.textContent = err; return; }
+          if (validateContact(form)) return; // inline error already shown under the field
         }
         if (btn) { btn.disabled = true; btn.textContent = "Sending…"; }
         try {
@@ -1387,11 +1428,12 @@ const websiteJsonLd = {
           });
           var data = await res.json().catch(function () { return {}; });
           if (res.ok && data.ok) {
-            if (meta) meta.textContent = source === "contact"
+            var successMsg = source === "contact"
               ? "Thanks — message logged. I'll be in touch."
               : "Thanks — you're on the list.";
-            if (btn) btn.textContent = "Done";
+            if (window.vpToast) window.vpToast(successMsg);
             form.reset();
+            if (btn) { btn.disabled = false; btn.innerHTML = originalBtn; }
           } else {
             if (meta) meta.textContent = (data && data.error) || "Something went wrong. Try again.";
             if (btn) { btn.disabled = false; btn.innerHTML = originalBtn; }
