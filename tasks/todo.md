@@ -1,77 +1,46 @@
-# Mobile UI polish — hamburger top-right + framing fixes
+# In-flight session — 2026-05-22
 
-## Context
-User wants the mobile hamburger on the **top right** (currently top-left) with the
-drawer sliding in from the right. Logo stays at the bottom of the drawer (already does).
-Full polish sweep at ≤375px / ≤768px for any overflow / poor-framing issues.
+## Decisions
+- Decap auth → **Sveltia CMS** (drop-in, single-user, GitHub PAT). DONE.
+- Newsletter ESP → skip. Airtable `/api/submit` already captures.
+- Footer wordmark → use logo image (light/inverted variant) instead of text `<em>vasprisin</em>`.
+- Sticky header → already in CSS but broken by `overflow-x` on `<body>`. Fixed.
 
-DOM order is preserved in both `BlogLayout.astro` and `index.astro`
-(`[menu-btn][wordmark][nav][meta]`) for accessibility / source order; visual
-reorder is done via CSS `order:` only.
+## Done this session
+- [x] Removed broken `gallery.html` CTA in `index.astro`
+- [x] Sveltia migration in `public/admin/{index.html → src/pages/admin/index.astro, config.yml}`
+- [x] HMR fix in `astro.config.mjs` (clientPort 443, protocol wss) for Replit preview
+- [x] `tasks/handoff.md` rewritten for 2026-05-22
+- [x] Restarted `astro dev` so HMR config takes effect
+- [x] `/admin/` now resolves cleanly via Astro page (was a dev-server directory-index quirk)
+- [x] Live-verified `/api/submit` — Airtable POST 200, `{"ok":true}`, env var set
+- [x] Generated `public/vasprisin-logo-light.png` (sharp negate) for dark footer
+- [x] Footer markup + CSS swap — text wordmark → light logo image
+- [x] Fixed sticky header on scroll (was breaking due to `overflow-x: clip` on `body`)
 
-## Checklist
+## In progress
+### Sveltia content display
+Sveltia's `cover` field uploads to `public/uploads/` and writes path to frontmatter, but the blog index and blog post pages never RENDER the cover. Only used for OG/social cards. Need to:
+- [ ] Pre-create `public/uploads/` directory with `.gitkeep`
+- [ ] Render `cover` as card thumbnail on blog index
+- [ ] Render `cover` as hero figure on blog post detail page
+- [ ] Add `.vp-blog-card-cover` and `.vp-blog-article-cover` CSS
+- [ ] Confirm Sveltia's `image` widget produces paths the schema accepts
 
-### 1. Hamburger → top right on mobile (CSS-only, DOM untouched)
-- [x] In `public/site.css` at the `@media (max-width: 900px)` block (~line 2730),
-      change `.vp-header-inner` to `grid-template-columns: 1fr auto`
-- [x] Add `.vp-menu-btn { order: 2; justify-self: end; }` to the same block
-- [x] Confirm wordmark sits in the `1fr` (left) cell — `justify-self: start`
-      if needed
-- [x] Verify the earlier `@media (max-width: 900px)` block (~line 2539) already
-      had `1fr auto` — both now consistent; no conflict
+### Country code selector for phone field
+- [ ] Pick library — **intl-tel-input** (MIT, vanilla JS, dropdown with country search)
+- [ ] Load via CDN with SRI hash
+- [ ] Wrap `#f-phone` markup as required
+- [ ] Init in existing form IIFE
+- [ ] Override library CSS to match brand (paper-100 bg, hairline borders, no rounded corners, system font)
+- [ ] Ensure the assembled E.164 number gets submitted to `/api/submit` (not just the national portion)
 
-### 2. Drawer slides from right
-- [x] `.vp-drawer`: `left: 0` → `right: 0`
-- [x] `.vp-drawer`: `border-right` → `border-left`
-- [x] `.vp-drawer`: `translateX(-100%)` → `translateX(100%)`
-- [x] `.vp-drawer-close`: `right: 14px` → `left: 14px`
-- [x] Drawer logo position (bottom via `margin-top: auto`) unchanged
+## Still blocked on user
+- Real publications data for `src/pages/publications.astro:17-81`
+- 1200×630 OG card → `public/og-card.png`
+- GitHub PAT entry on Sveltia login screen (user has the PAT; just paste at `/admin/`)
 
-### 3. Prose long-word wrap (prevent silent URL clipping)
-- [x] Add `overflow-wrap: anywhere; word-break: break-word;` to `.vp-prose p`,
-      `.vp-prose li`, `.vp-prose blockquote`, `.vp-prose code`
-
-### 4. Polish sweep ≤375px / ≤768px
-- [x] Curl every route (`/`, `/blog`, `/blog/<slug>`, `/publications`) — all 200
-- [x] Grep rendered HTML on each route for `.vp-menu-btn` + `.vp-drawer` markup
-- [x] Scan rendered HTML for fixed widths / `min-width` / horizontal-overflow
-      sources at mobile widths
-- [x] Fix anything that demonstrably breaks framing — see review summary below
-
-### 5. Verify
-- [x] All 4 routes still return 200 after edits
-- [x] CSS file rule blocks read end-to-end for stray braces / syntax errors
-- [x] Desktop layout (≥901px) confirmed untouched
-
-## Review summary
-Changes made:
-
-1. **Header grid + hamburger position (`public/site.css`)**
-   - Line 2733: `.vp-header-inner` columns changed from `auto 1fr` to `1fr auto`
-     inside the `@media (max-width: 900px)` block.
-   - Added `.vp-menu-btn { order: 2; justify-self: end; }` to that same block so
-     the hamburger renders on the right while keeping DOM source order. The
-     wordmark naturally fills the `1fr` cell on the left.
-
-2. **Drawer slides from right (`public/site.css`)**
-   - `.vp-drawer`: `left: 0` → `right: 0`, `border-right` → `border-left`,
-     `translateX(-100%)` → `translateX(100%)`.
-   - `.vp-drawer-close`: `right: 14px` → `left: 14px`.
-   - Drawer logo position untouched (still pinned to bottom via `margin-top: auto`).
-
-3. **Prose long-word wrap (`public/site.css`)**
-   - Added `overflow-wrap: anywhere; word-break: break-word;` to `.vp-prose p`,
-     `.vp-prose li`, `.vp-prose blockquote`, and `.vp-prose code` so any long
-     URL in a blog post wraps instead of being silently clipped by
-     `body { overflow-x: hidden }`.
-
-4. **Polish sweep findings**
-   - Reviewed `.vp-popup`, `.vp-news-card`, `.vp-news-inline`, `.vp-co-plate`,
-     gallery tiles, hero portrait cap, stats grid, blog grid. Already safe on
-     mobile (max-width or single-column at the appropriate breakpoint, with
-     `min-width: 0` on form inputs from the earlier audit).
-   - No new markup changes required.
-
-Files touched:
-- `public/site.css` (mobile header grid, drawer direction, prose wrap)
-- `tasks/todo.md` (this plan + summary)
+## Not actioned (skip unless asked)
+- apple-touch-icon — already exists at 180×180; no action needed
+- Logo SVG / additional variants — header PNG + new footer light PNG cover both contexts
+- Publications as Content Collection — only worth doing after Sveltia is verified end-to-end with at least one cover image

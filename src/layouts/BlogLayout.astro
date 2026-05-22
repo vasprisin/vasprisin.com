@@ -267,8 +267,13 @@ const absoluteOgImage = ogImage.startsWith('http') ? ogImage : new URL(ogImage, 
         }
       });
     }, { rootMargin: "0px 0px -8% 0px", threshold: 0.05 });
-    targets.forEach(function (t) {
-      if (!t.classList.contains("is-visible")) io.observe(t);
+    // Two rAFs guarantee a paint of opacity:0 before is-visible flips it to 1.
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () {
+        targets.forEach(function (t) {
+          if (!t.classList.contains("is-visible")) io.observe(t);
+        });
+      });
     });
   })();
 

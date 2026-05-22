@@ -1,18 +1,31 @@
-# Decap CMS configuration for vasprisin.com
-# Docs: https://decapcms.org/docs/
+# Sveltia CMS configuration for vasprisin.com
+# Docs: https://github.com/sveltia/sveltia-cms
 #
-# Default backend: Netlify Identity + Git Gateway (easiest production path).
+# Sveltia is a drop-in Decap CMS fork. It accepts a GitHub Personal Access
+# Token directly on login — no OAuth app or proxy server required.
 # To switch backends, comment out the active block below and uncomment the
 # alternate you want. Only one `backend:` block may be active at a time.
 
-# --- ACTIVE BACKEND: Git Gateway (Netlify Identity) ---
+# --- ACTIVE BACKEND: GitHub (Sveltia direct PAT auth) ---
+# On first login Sveltia prompts for a GitHub Personal Access Token.
+# Use a fine-grained PAT scoped to repo `vasprisin/vasprisin.com` with
+# permissions: Contents (read & write) + Metadata (read).
 backend:
-  name: git-gateway
+  name: github
+  repo: vasprisin/vasprisin.com
   branch: main
 
-# --- ALTERNATE BACKEND 1: GitHub OAuth ---
+# --- ALTERNATE BACKEND 1: Git Gateway (Netlify Identity) ---
+# Original Decap default. Requires Netlify Identity + Git Gateway wiring,
+# which this Railway-hosted site does not have.
+#
+# backend:
+#   name: git-gateway
+#   branch: main
+
+# --- ALTERNATE BACKEND 2: GitHub OAuth (via proxy) ---
 # Requires a GitHub OAuth app and an OAuth proxy (Netlify provides one for free).
-# Replace the active backend above with this block to use it.
+# Only needed for multi-user setups where individual PATs aren't practical.
 #
 # backend:
 #   name: github
@@ -21,7 +34,7 @@ backend:
 #   # Optional: self-hosted OAuth proxy. Defaults to Netlify's hosted OAuth.
 #   # base_url: https://your-oauth-proxy.example.com
 
-# --- ALTERNATE BACKEND 2: Local proxy (no auth, for local dev) ---
+# --- ALTERNATE BACKEND 3: Local proxy (no auth, for local dev) ---
 # Run `npx decap-server` in a separate terminal (listens on port 8081).
 # Then visit http://localhost:5000/admin/. Posts save straight to disk.
 #

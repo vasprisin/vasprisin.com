@@ -1,4 +1,5 @@
 ---
+export const prerender = true;
 import { getCollection } from 'astro:content';
 import BlogLayout from '../../layouts/BlogLayout.astro';
 
@@ -64,6 +65,11 @@ const blogJsonLd = {
           <div class="vp-blog-feed">
             {posts.map((p, i) => (
               <article class="vp-blog-card">
+                {p.data.cover && (
+                  <a class="vp-blog-card-cover" href={`/blog/${p.id}`} aria-hidden="true" tabindex="-1">
+                    <img src={p.data.cover} alt="" loading="lazy" />
+                  </a>
+                )}
                 <div class="vp-blog-card-meta">
                   <span class="vp-blog-card-num">{String(i + 1).padStart(2, '0')}</span>
                   <span class="vp-blog-card-sep">—</span>

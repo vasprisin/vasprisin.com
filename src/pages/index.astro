@@ -1,4 +1,5 @@
 ---
+export const prerender = true;
 const SITE_URL = 'https://vasprisin.com';
 const pageTitle = 'Priyanshu Singh — vasprisin';
 const pageDescription = 'Priyanshu Singh — founder, operator. Dolta, Capital Hunt, and seven other ventures. LDN / DXB / BOM.';
@@ -74,7 +75,9 @@ const websiteJsonLd = {
     href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&display=swap"
     rel="stylesheet" />
 
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@25/build/css/intlTelInput.min.css" />
   <link rel="stylesheet" href="/site.css" />
+  <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@25/build/js/intlTelInputWithUtils.min.js" defer></script>
 
   <script type="application/ld+json" set:html={JSON.stringify(personJsonLd)} />
   <script type="application/ld+json" set:html={JSON.stringify(websiteJsonLd)} />
@@ -498,13 +501,6 @@ const websiteJsonLd = {
               <div class="vp-gallery-tile-caption"><em>Gen AI London</em>With some new friends</div>
             </a>
           </div>
-
-          <div class="vp-gallery-cta">
-            <a class="vp-view-gallery" href="gallery.html" aria-label="View full gallery">
-              View full gallery
-              <span class="vp-view-gallery-arrow">→</span>
-            </a>
-          </div>
         </section>
       </div>
     </section>
@@ -900,14 +896,14 @@ const websiteJsonLd = {
                 across LDN, DXB, BOM. No spam, unsubscribe anytime.
               </p>
             </div>
-            <form class="vp-news-card-form" onsubmit="event.preventDefault(); this.querySelector('.vp-news-meta').textContent='Thanks — you\'re on the list.'; this.querySelector('button').textContent='Done';">
+            <form class="vp-news-card-form" data-vp-form="newsletter">
               <div class="vp-news-card-row">
                 <input class="vp-input" type="email" name="email" placeholder="you@company.com" autocomplete="email" required />
                 <button class="vp-btn-submit" type="submit">
                   Subscribe <span aria-hidden="true">&rarr;</span>
                 </button>
               </div>
-              <div class="vp-news-meta">Joined by 2,400+ operators.</div>
+              <div class="vp-news-meta" data-vp-meta>Joined by 2,400+ operators.</div>
             </form>
           </div>
         </section>
@@ -941,7 +937,7 @@ const websiteJsonLd = {
 
             <!-- RIGHT: form -->
             <div class="vp-contact-form-wrap">
-              <form class="vp-contact-form" onsubmit="event.preventDefault(); this.querySelector('.vp-form-meta').textContent='Thanks — message logged. I’ll be in touch.';">
+              <form class="vp-contact-form" data-vp-form="contact">
                 <div class="vp-form-row">
                   <div class="vp-field">
                     <label class="vp-field-label" for="f-first">First name</label>
@@ -959,12 +955,12 @@ const websiteJsonLd = {
                   </div>
                   <div class="vp-field">
                     <label class="vp-field-label" for="f-phone">Phone</label>
-                    <input class="vp-input" id="f-phone" name="phone" type="tel" autocomplete="tel" />
+                    <input class="vp-input" id="f-phone" name="phone" type="tel" autocomplete="tel" data-vp-phone />
                   </div>
                 </div>
                 <div class="vp-field">
                   <label class="vp-field-label" for="f-linkedin">LinkedIn <span style="text-transform:none; letter-spacing:0;">(optional)</span></label>
-                  <input class="vp-input" id="f-linkedin" name="linkedin" type="url" placeholder="https://linkedin.com/in/…" />
+                  <input class="vp-input" id="f-linkedin" name="linkedin" type="text" inputmode="url" autocomplete="url" placeholder="linkedin.com/in/yourname" data-vp-linkedin />
                 </div>
                 <div class="vp-field">
                   <label class="vp-field-label" for="f-inquiry">Inquiry type</label>
@@ -988,6 +984,7 @@ const websiteJsonLd = {
                     Send message
                     <span aria-hidden="true">→</span>
                   </button>
+                  <div class="vp-form-meta" data-vp-meta></div>
                 </div>
               </form>
             </div>
@@ -1009,7 +1006,7 @@ const websiteJsonLd = {
 
         <!-- BRAND BLOCK -->
         <div>
-          <div class="vp-footer-wordmark"><em>vasprisin</em></div>
+          <div class="vp-footer-wordmark"><img src="/vasprisin-logo-light.png" alt="vasprisin" width="800" height="200" /></div>
           <p class="vp-footer-tag">
             The personal site of Priyanshu Singh.<br />
             Founder, operator. Based across London, Dubai, and Mumbai.
@@ -1186,15 +1183,11 @@ const websiteJsonLd = {
     sectionTargets.forEach(function (t) { t.classList.add("vp-reveal"); });
     staggerTargets.forEach(function (t) { t.classList.add("vp-stagger"); });
 
-    // hero is above the fold — show immediately
-    document.querySelectorAll(".vp-hero").forEach(function (h) {
-      h.classList.add("is-visible");
-    });
-
     var all = [].concat([].slice.call(sectionTargets), [].slice.call(staggerTargets));
 
     if (!("IntersectionObserver" in window)) {
       all.forEach(function (t) { t.classList.add("is-visible"); });
+      document.querySelectorAll(".vp-hero").forEach(function (h) { h.classList.add("is-visible"); });
       return;
     }
     var io = new IntersectionObserver(function (entries) {
@@ -1206,8 +1199,15 @@ const websiteJsonLd = {
       });
     }, { rootMargin: "0px 0px -8% 0px", threshold: 0.05 });
 
-    all.forEach(function (t) {
-      if (!t.classList.contains("is-visible")) io.observe(t);
+    // Two rAFs guarantee a paint of opacity:0 before is-visible flips it to 1.
+    // Without this, above-the-fold sections snap to opacity:1 with no visible fade.
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () {
+        document.querySelectorAll(".vp-hero").forEach(function (h) { h.classList.add("is-visible"); });
+        all.forEach(function (t) {
+          if (!t.classList.contains("is-visible")) io.observe(t);
+        });
+      });
     });
   })();
 
@@ -1272,13 +1272,136 @@ const websiteJsonLd = {
       if (e.key === "Escape" && popup.classList.contains("is-open")) close();
     });
     if (form) {
-      form.addEventListener("submit", function (e) {
+      form.addEventListener("submit", async function (e) {
         e.preventDefault();
-        if (meta) meta.textContent = "Thanks — you're on the list.";
-        form.querySelector(".vp-popup-submit").textContent = "Done";
-        setTimeout(close, 1400);
+        var btn = form.querySelector(".vp-popup-submit");
+        var emailInput = form.querySelector('input[type="email"]');
+        var email = emailInput ? emailInput.value.trim() : "";
+        if (!email) return;
+        var originalBtn = btn ? btn.textContent : "";
+        if (btn) { btn.disabled = true; btn.textContent = "Sending…"; }
+        try {
+          var res = await fetch("/api/submit", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ source: "popup", email: email }),
+          });
+          var data = await res.json().catch(function () { return {}; });
+          if (res.ok && data.ok) {
+            if (meta) meta.textContent = "Thanks — you're on the list.";
+            if (btn) btn.textContent = "Done";
+            setTimeout(close, 1400);
+          } else {
+            if (meta) meta.textContent = (data && data.error) || "Something went wrong. Try again.";
+            if (btn) { btn.disabled = false; btn.textContent = originalBtn; }
+          }
+        } catch (err) {
+          if (meta) meta.textContent = "Network error. Try again.";
+          if (btn) { btn.disabled = false; btn.textContent = originalBtn; }
+        }
       });
     }
+  })();
+
+  // Phone field — country-code selector via intl-tel-input
+  (function () {
+    function init() {
+      if (!window.intlTelInput) { setTimeout(init, 100); return; }
+      document.querySelectorAll("[data-vp-phone]").forEach(function (input) {
+        if (input._iti) return;
+        input._iti = window.intlTelInput(input, {
+          initialCountry: "gb",
+          countryOrder: ["gb", "ae", "in", "us"],
+          separateDialCode: true,
+        });
+      });
+    }
+    init();
+  })();
+
+  // LinkedIn field — normalize on blur, validate on submit (optional, but if filled must contain "linkedin")
+  (function () {
+    function normalizeLinkedIn(v) {
+      v = (v || "").trim();
+      if (!v) return "";
+      if (/^https?:\/\//i.test(v)) {
+        return v.replace(/^(https?:\/\/)(?!www\.)linkedin\.com/i, "$1www.linkedin.com");
+      }
+      v = v.replace(/^\/+/, "").replace(/^www\./i, "");
+      if (/^linkedin\.com/i.test(v)) return "https://www." + v;
+      return v;
+    }
+    document.querySelectorAll("[data-vp-linkedin]").forEach(function (input) {
+      input.addEventListener("blur", function () {
+        var n = normalizeLinkedIn(input.value);
+        if (n && n !== input.value) input.value = n;
+        input.setCustomValidity("");
+      });
+      input.addEventListener("input", function () { input.setCustomValidity(""); });
+    });
+  })();
+
+  // wire data-vp-form forms (newsletter + contact) to /api/submit
+  (function () {
+    function payloadFor(form, source) {
+      var phone = form.querySelector("[data-vp-phone]");
+      if (phone && phone._iti && phone.value) {
+        var full = phone._iti.getNumber();
+        if (full) phone.value = full;
+      }
+      var fd = new FormData(form);
+      var obj = { source: source };
+      fd.forEach(function (v, k) { obj[k] = typeof v === "string" ? v : ""; });
+      return obj;
+    }
+    function validateContact(form) {
+      // LinkedIn: optional, but if filled must contain "linkedin"
+      var li = form.querySelector("[data-vp-linkedin]");
+      if (li) {
+        var v = (li.value || "").trim();
+        if (v && !/linkedin/i.test(v)) {
+          li.focus();
+          return "Please enter a LinkedIn Profile URL or skip this question.";
+        }
+      }
+      return null;
+    }
+    document.querySelectorAll("[data-vp-form]").forEach(function (form) {
+      var source = form.getAttribute("data-vp-form");
+      var meta = form.querySelector("[data-vp-meta]");
+      var btn = form.querySelector("button[type='submit']");
+      var originalBtn = btn ? btn.innerHTML : "";
+      form.addEventListener("submit", async function (e) {
+        e.preventDefault();
+        if (meta) meta.textContent = "";
+        if (source === "contact") {
+          var err = validateContact(form);
+          if (err) { if (meta) meta.textContent = err; return; }
+        }
+        if (btn) { btn.disabled = true; btn.textContent = "Sending…"; }
+        try {
+          var res = await fetch("/api/submit", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payloadFor(form, source)),
+          });
+          var data = await res.json().catch(function () { return {}; });
+          if (res.ok && data.ok) {
+            if (meta) meta.textContent = source === "contact"
+              ? "Thanks — message logged. I'll be in touch."
+              : "Thanks — you're on the list.";
+            if (btn) btn.textContent = "Done";
+            form.reset();
+          } else {
+            if (meta) meta.textContent = (data && data.error) || "Something went wrong. Try again.";
+            if (btn) { btn.disabled = false; btn.innerHTML = originalBtn; }
+          }
+        } catch (err) {
+          if (meta) meta.textContent = "Network error. Try again.";
+          if (btn) { btn.disabled = false; btn.innerHTML = originalBtn; }
+        }
+      });
+    });
   })();
 </script>
 
