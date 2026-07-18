@@ -1,9 +1,12 @@
 import type { APIRoute } from 'astro';
+import { syncContact, sendTemplateEmail, brevoEnabled } from '../../lib/brevo';
 
 export const prerender = false;
 
-const BASE_ID = import.meta.env.AIRTABLE_BASE_ID ?? 'app8hP7xVZDj3o45h';
-const TABLE_NAME = import.meta.env.AIRTABLE_TABLE ?? 'leads';
+// Read at runtime (process.env), not build time. `import.meta.env` inlines
+// non-PUBLIC vars during `astro build`, so host-set values would be ignored.
+const BASE_ID = process.env.AIRTABLE_BASE_ID ?? 'app8hP7xVZDj3o45h';
+const TABLE_NAME = process.env.AIRTABLE_TABLE ?? 'leads';
 const ALLOWED_SOURCES = new Set(['contact', 'newsletter', 'popup']);
 const ALLOWED_INQUIRIES = new Set(['press', 'service', 'general']);
 
@@ -44,14 +47,20 @@ export const POST: APIRoute = async ({ request }) => {
     return json(400, { ok: false, error: 'A valid email is required.' });
   }
 
+  // First name is collected on every form (it is the Airtable primary field).
+  const first = trim(body.first, 100);
+  if (!first) {
+    return json(400, { ok: false, error: 'A first name is required.' });
+  }
+
   const fields: Record<string, string> = {
+    'First Name': first,
     Email: email,
     Source: 'vasprisin.com',
     sub_source: 'form',
   };
 
   if (source === 'contact') {
-    const first = trim(body.first, 100);
     const last = trim(body.last, 100);
     const message = trim(body.message, 5000);
     const inquiry = trim(body.inquiry, 32);
@@ -59,14 +68,13 @@ export const POST: APIRoute = async ({ request }) => {
     const phone = trim(body.phone, 32);
     const linkedin = trim(body.linkedin, 300);
 
-    if (!first || !last || !message || !title) {
+    if (!last || !message || !title) {
       return json(400, { ok: false, error: 'Missing required fields.' });
     }
     if (!ALLOWED_INQUIRIES.has(inquiry)) {
       return json(400, { ok: false, error: 'Invalid inquiry type.' });
     }
 
-    fields['First Name'] = first;
     fields['Last Name'] = last;
     fields['Title'] = title;
     fields['Message'] = message;
@@ -96,6 +104,23 @@ export const POST: APIRoute = async ({ request }) => {
     const text = await res.text().catch(() => '');
     console.error('[api/submit] airtable error', res.status, text);
     return json(502, { ok: false, error: 'Submission failed. Please try again.' });
+  }
+
+  // Airtable is the record of truth and has already accepted the lead.
+  // Brevo is best-effort from here: log failures, but always return success so
+  // a Brevo outage can never cost a captured lead or prompt a duplicate resubmit.
+  if (brevoEnabled()) {
+    try {
+      if (source === 'contact') {
+        await sendTemplateEmail('BREVO_TEMPLATE_CONTACT', email, first);
+      } else {
+        // newsletter + popup: subscribe them, then confirm.
+        await syncContact(email, first);
+        await sendTemplateEmail('BREVO_TEMPLATE_NEWSLETTER', email, first);
+      }
+    } catch (err) {
+      console.error('[api/submit] brevo step failed (submission still saved)', err);
+    }
   }
 
   return json(200, { ok: true });

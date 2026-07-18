@@ -149,12 +149,13 @@ const graphJsonLd = {
                   <span>Newsletter</span>
                 </div>
                 <h3 class="vp-news-inline-title">Liked this? Get the <em>next one</em> by email.</h3>
-                <p>One short note a week. Capital, pipeline, operating. No spam.</p>
+                <p>Weekly insights on international political economy.</p>
               </div>
-              <form class="vp-news-inline-form" onsubmit="event.preventDefault(); this.querySelector('.vp-news-meta').textContent='Thanks — you\\'re on the list.'; this.querySelector('button').textContent='Done';">
-                <input class="vp-input" type="email" name="email" placeholder="you@company.com" autocomplete="email" required />
+              <form class="vp-news-inline-form" data-vp-form="newsletter">
+                <input class="vp-input" type="text" name="first" placeholder="First name" autocomplete="given-name" aria-label="First name" required />
+                <input class="vp-input" type="email" name="email" placeholder="you@company.com" autocomplete="email" aria-label="Email address" required />
                 <button class="vp-btn-submit" type="submit">Subscribe <span aria-hidden="true">→</span></button>
-                <div class="vp-news-meta"></div>
+                <div class="vp-news-meta" data-vp-meta role="status" aria-live="polite"></div>
               </form>
             </aside>
 

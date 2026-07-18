@@ -1,0 +1,84 @@
+---
+export const prerender = true;
+
+import BlogLayout from '../layouts/BlogLayout.astro';
+import { GALLERY, altFor } from '../data/gallery';
+
+const SITE_URL = 'https://vasprisin.com';
+const pageUrl = `${SITE_URL}/gallery`;
+
+const collectionJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'ImageGallery',
+  name: 'Gallery — Priyanshu Singh',
+  description:
+    'Rooms, stages, and cities — moments from building across London, Dubai, and Mumbai.',
+  url: pageUrl,
+  image: GALLERY.map((g) => `${SITE_URL}/assets/gallery/${g.src}`),
+};
+
+const breadcrumbJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_URL + '/' },
+    { '@type': 'ListItem', position: 2, name: 'Gallery', item: pageUrl },
+  ],
+};
+
+const graphJsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [collectionJsonLd, breadcrumbJsonLd],
+};
+---
+<BlogLayout
+  title="Gallery — Priyanshu Singh"
+  description="Rooms, stages, and cities — moments from building across London, Dubai, and Mumbai."
+  canonical={pageUrl}
+  ogType="website"
+  ogImage="/assets/gallery/house-of-lords.jpeg"
+  jsonLd={graphJsonLd}>
+
+  <section class="vp-band vp-band--dark">
+    <div class="vp-band-inner">
+      <section class="vp-section vp-blog-shell">
+
+        <div class="vp-section-head">
+          <div class="vp-eyebrow">
+            <span class="vp-eyebrow-num">★</span>
+            <span class="vp-eyebrow-sep">—</span>
+            <span>Gallery</span>
+          </div>
+          <h1 class="vp-section-title">Rooms, stages, <em>and cities.</em></h1>
+        </div>
+
+        <div class="vp-gallery-grid vp-gallery-grid--full">
+          {GALLERY.map((g, i) => (
+            <figure class="vp-gallery-tile has-img">
+              <img
+                src={`/assets/gallery/${g.src}`}
+                alt={altFor(g)}
+                loading={i < 6 ? 'eager' : 'lazy'}
+                decoding="async"
+                width="800"
+                height="600"
+              />
+              <figcaption class="vp-gallery-tile-caption">
+                <em>{g.title}</em>{g.caption}
+              </figcaption>
+            </figure>
+          ))}
+        </div>
+
+        <div class="vp-gallery-cta">
+          <a class="vp-view-gallery" href="/#gallery">
+            <span class="vp-view-gallery-arrow" aria-hidden="true">&larr;</span>
+            Back to home
+          </a>
+        </div>
+
+      </section>
+    </div>
+  </section>
+
+</BlogLayout>

@@ -127,16 +127,16 @@ const absoluteOgImage = ogImage.startsWith('http') ? ogImage : new URL(ogImage, 
     </div>
     <h3 class="vp-popup-title">Don&rsquo;t go <em>empty&#8209;handed.</em></h3>
     <p class="vp-popup-lede">
-      Weekly notes on <em>capital, pipeline, and operating</em> across LDN, DXB, BOM.
-      No spam, unsubscribe anytime.
+      Weekly insights on <em>international political economy.</em>
     </p>
     <form class="vp-popup-form" id="vp-popup-form">
-      <input class="vp-input vp-popup-input" type="email" name="email" placeholder="you@company.com" autocomplete="email" required />
+      <input class="vp-input vp-popup-input" type="text" name="first" placeholder="First name" autocomplete="given-name" aria-label="First name" required />
+      <input class="vp-input vp-popup-input" type="email" name="email" placeholder="you@company.com" autocomplete="email" aria-label="Email address" required />
       <button class="vp-btn-submit vp-popup-submit" type="submit">
         Subscribe <span aria-hidden="true">→</span>
       </button>
     </form>
-    <div class="vp-popup-meta" id="vp-popup-meta">Joined by 2,400+ operators.</div>
+    <div class="vp-popup-meta" id="vp-popup-meta" role="status" aria-live="polite"></div>
   </aside>
 
   <!-- FOOTER -->
@@ -172,9 +172,10 @@ const absoluteOgImage = ogImage.startsWith('http') ? ogImage : new URL(ogImage, 
         <div class="vp-footer-col">
           <div class="vp-footer-label">Site</div>
           <a href="/#companies">Companies</a>
-          <a href="/#gallery">Gallery</a>
+          <a href="/gallery">Gallery</a>
           <a href="/#letters">Letters</a>
           <a href="/blog">Blog</a>
+          <a href="/publications">Publications</a>
           <a href="/#testimonials">Testimonials</a>
           <a href="/#contact">Contact</a>
         </div>
@@ -341,13 +342,74 @@ const absoluteOgImage = ogImage.startsWith('http') ? ogImage : new URL(ogImage, 
       if (e.key === "Escape" && popup.classList.contains("is-open")) close();
     });
     if (form) {
-      form.addEventListener("submit", function (e) {
+      form.addEventListener("submit", async function (e) {
         e.preventDefault();
-        if (meta) meta.textContent = "Thanks — you're on the list.";
-        form.querySelector(".vp-popup-submit").textContent = "Done";
-        setTimeout(close, 1400);
+        var btn = form.querySelector(".vp-popup-submit");
+        var emailInput = form.querySelector('input[type="email"]');
+        var firstInput = form.querySelector('input[name="first"]');
+        var email = emailInput ? emailInput.value.trim() : "";
+        var first = firstInput ? firstInput.value.trim() : "";
+        if (!email || !first) return;
+        var originalBtn = btn ? btn.innerHTML : "";
+        if (btn) { btn.disabled = true; btn.textContent = "Sending…"; }
+        try {
+          var res = await fetch("/api/submit", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ source: "popup", email: email, first: first }),
+          });
+          var data = await res.json().catch(function () { return {}; });
+          if (res.ok && data.ok) {
+            if (meta) meta.textContent = "Thanks — you're on the list.";
+            if (btn) btn.textContent = "Done";
+            setTimeout(close, 1400);
+          } else {
+            if (meta) meta.textContent = (data && data.error) || "Something went wrong. Try again.";
+            if (btn) { btn.disabled = false; btn.innerHTML = originalBtn; }
+          }
+        } catch (err) {
+          if (meta) meta.textContent = "Network error. Try again.";
+          if (btn) { btn.disabled = false; btn.innerHTML = originalBtn; }
+        }
       });
     }
+  })();
+
+  // wire inline [data-vp-form] newsletter forms (blog index + article pages) to /api/submit
+  (function () {
+    document.querySelectorAll("[data-vp-form]").forEach(function (form) {
+      var source = form.getAttribute("data-vp-form");
+      var meta = form.querySelector("[data-vp-meta]");
+      var btn = form.querySelector("button[type='submit']");
+      var originalBtn = btn ? btn.innerHTML : "";
+      form.addEventListener("submit", async function (e) {
+        e.preventDefault();
+        if (meta) meta.textContent = "";
+        var fd = new FormData(form);
+        var payload = { source: source };
+        fd.forEach(function (v, k) { payload[k] = typeof v === "string" ? v : ""; });
+        if (btn) { btn.disabled = true; btn.textContent = "Sending…"; }
+        try {
+          var res = await fetch("/api/submit", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+          });
+          var data = await res.json().catch(function () { return {}; });
+          if (res.ok && data.ok) {
+            if (meta) meta.textContent = "Thanks — you're on the list.";
+            form.reset();
+            if (btn) btn.textContent = "Done";
+          } else {
+            if (meta) meta.textContent = (data && data.error) || "Something went wrong. Try again.";
+            if (btn) { btn.disabled = false; btn.innerHTML = originalBtn; }
+          }
+        } catch (err) {
+          if (meta) meta.textContent = "Network error. Try again.";
+          if (btn) { btn.disabled = false; btn.innerHTML = originalBtn; }
+        }
+      });
+    });
   })();
 </script>
 

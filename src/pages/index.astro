@@ -1,4 +1,6 @@
 ---
+import { FEATURED, altFor } from '../data/gallery';
+
 export const prerender = true;
 const SITE_URL = 'https://vasprisin.com';
 const pageTitle = 'Priyanshu Singh — vasprisin';
@@ -464,41 +466,18 @@ const websiteJsonLd = {
           </div>
 
           <div class="vp-gallery-grid">
-            <a class="vp-gallery-tile has-img" href="#gallery">
-              <img src="/assets/gallery/kishore-lulla.jpeg" alt="With Kishore Lulla, Bollywood&rsquo;s biggest producer" loading="lazy" />
-              <div class="vp-gallery-tile-caption"><em>Kishore Lulla</em>Bollywood&rsquo;s biggest producer</div>
-            </a>
-            <a class="vp-gallery-tile has-img" href="#gallery">
-              <img src="/assets/gallery/house-of-lords.jpeg" alt="Afternoon Tea at the House of Lords with Sophie Newbound" loading="lazy" />
-              <div class="vp-gallery-tile-caption"><em>House of Lords</em>Afternoon tea with Sophie Newbound</div>
-            </a>
-            <a class="vp-gallery-tile has-img" href="#gallery">
-              <img src="/assets/gallery/gfois-dubai.jpeg" alt="VIP Delegate at the Global Family Office Investment Summit Dubai" loading="lazy" />
-              <div class="vp-gallery-tile-caption"><em>GFOIS Dubai</em>VIP delegate, Global Family Office Summit</div>
-            </a>
-            <a class="vp-gallery-tile has-img" href="#gallery">
-              <img src="/assets/gallery/lord-rami-ranger.jpeg" alt="Lord Rami Ranger gifts me his autobiography" loading="lazy" />
-              <div class="vp-gallery-tile-caption"><em>Lord Rami Ranger</em>Gifts me his autobiography</div>
-            </a>
-            <a class="vp-gallery-tile has-img" href="#gallery">
-              <img src="/assets/gallery/gala-dinner-dubai.jpeg" alt="At Gala Dinner in Dubai" loading="lazy" />
-              <div class="vp-gallery-tile-caption"><em>Gala Dinner</em>Dubai</div>
-            </a>
-            <a class="vp-gallery-tile has-img" href="#gallery">
-              <img src="/assets/gallery/ciros-pomodoro.jpeg" alt="With Ciro Orsini at the legendary Ciro&rsquo;s Pomodoro knightsbridge" loading="lazy" />
-              <div class="vp-gallery-tile-caption"><em>Ciro Orsini</em>At Ciro&rsquo;s Pomodoro, Knightsbridge</div>
-            </a>
-            <a class="vp-gallery-tile has-img" href="#gallery">
-              <img src="/assets/gallery/zebu-live.jpeg" alt="Attending Lord Kulveer Singh Ranger&rsquo;s talk at Zebu Live 2025" loading="lazy" />
-              <div class="vp-gallery-tile-caption"><em>Lord Kulveer Singh Ranger</em>Attending his talk at Zebu Live 2025</div>
-            </a>
-            <a class="vp-gallery-tile has-img" href="#gallery">
-              <img src="/assets/gallery/oliver-rothschild.jpeg" alt="With Oliver Rothschild in City of London" loading="lazy" />
-              <div class="vp-gallery-tile-caption"><em>Oliver Rothschild</em>City of London</div>
-            </a>
-            <a class="vp-gallery-tile has-img" href="#gallery">
-              <img src="/assets/gallery/gen-ai-london.jpeg" alt="With some new friends at Gen AI London" loading="lazy" />
-              <div class="vp-gallery-tile-caption"><em>Gen AI London</em>With some new friends</div>
+            {FEATURED.map((g) => (
+              <a class="vp-gallery-tile has-img" href="/gallery">
+                <img src={`/assets/gallery/${g.src}`} alt={altFor(g)} loading="lazy" decoding="async" width="800" height="600" />
+                <div class="vp-gallery-tile-caption"><em>{g.title}</em>{g.caption}</div>
+              </a>
+            ))}
+          </div>
+
+          <div class="vp-gallery-cta">
+            <a class="vp-view-gallery" href="/gallery">
+              View full gallery
+              <span class="vp-view-gallery-arrow" aria-hidden="true">&rarr;</span>
             </a>
           </div>
         </section>
@@ -892,18 +871,18 @@ const websiteJsonLd = {
               </div>
               <h2 class="vp-news-card-title">Subscribe to my <em>email newsletter.</em></h2>
               <p class="vp-news-card-lede">
-                One short note a week on <em>capital, pipeline, and operating</em>
-                across LDN, DXB, BOM. No spam, unsubscribe anytime.
+                Weekly insights on <em>international political economy.</em>
               </p>
             </div>
             <form class="vp-news-card-form" data-vp-form="newsletter">
               <div class="vp-news-card-row">
-                <input class="vp-input" type="email" name="email" placeholder="you@company.com" autocomplete="email" required />
+                <input class="vp-input" type="text" name="first" placeholder="First name" autocomplete="given-name" aria-label="First name" required />
+                <input class="vp-input" type="email" name="email" placeholder="you@company.com" autocomplete="email" aria-label="Email address" required />
                 <button class="vp-btn-submit" type="submit">
                   Subscribe <span aria-hidden="true">&rarr;</span>
                 </button>
               </div>
-              <div class="vp-news-meta" data-vp-meta>Joined by 2,400+ operators.</div>
+              <div class="vp-news-meta" data-vp-meta role="status" aria-live="polite"></div>
             </form>
           </div>
         </section>
@@ -985,7 +964,7 @@ const websiteJsonLd = {
                     Send message
                     <span aria-hidden="true">→</span>
                   </button>
-                  <div class="vp-form-meta" data-vp-meta></div>
+                  <div class="vp-form-meta" data-vp-meta role="status" aria-live="polite"></div>
                 </div>
               </form>
             </div>
@@ -1040,9 +1019,10 @@ const websiteJsonLd = {
         <div class="vp-footer-col">
           <div class="vp-footer-label">Site</div>
           <a href="#companies">Companies</a>
-          <a href="#gallery">Gallery</a>
+          <a href="/gallery">Gallery</a>
           <a href="#letters">Letters</a>
           <a href="/blog">Blog</a>
+          <a href="/publications">Publications</a>
           <a href="#testimonials">Testimonials</a>
           <a href="#employee">Employee</a>
           <a href="#youtube">YouTube</a>
@@ -1071,16 +1051,16 @@ const websiteJsonLd = {
     </div>
     <h3 class="vp-popup-title">Don&rsquo;t go <em>empty&#8209;handed.</em></h3>
     <p class="vp-popup-lede">
-      Weekly notes on <em>capital, pipeline, and operating</em> across LDN, DXB, BOM.
-      No spam, unsubscribe anytime.
+      Weekly insights on <em>international political economy.</em>
     </p>
     <form class="vp-popup-form" id="vp-popup-form">
-      <input class="vp-input vp-popup-input" type="email" name="email" placeholder="you@company.com" autocomplete="email" required />
+      <input class="vp-input vp-popup-input" type="text" name="first" placeholder="First name" autocomplete="given-name" aria-label="First name" required />
+      <input class="vp-input vp-popup-input" type="email" name="email" placeholder="you@company.com" autocomplete="email" aria-label="Email address" required />
       <button class="vp-btn-submit vp-popup-submit" type="submit">
         Subscribe <span aria-hidden="true">&rarr;</span>
       </button>
     </form>
-    <div class="vp-popup-meta" id="vp-popup-meta">Joined by 2,400+ operators.</div>
+    <div class="vp-popup-meta" id="vp-popup-meta" role="status" aria-live="polite"></div>
   </aside>
 
   <div class="vp-drawer-backdrop" id="vp-drawer-backdrop" aria-hidden="true"></div>
@@ -1287,15 +1267,17 @@ const websiteJsonLd = {
         e.preventDefault();
         var btn = form.querySelector(".vp-popup-submit");
         var emailInput = form.querySelector('input[type="email"]');
+        var firstInput = form.querySelector('input[name="first"]');
         var email = emailInput ? emailInput.value.trim() : "";
-        if (!email) return;
-        var originalBtn = btn ? btn.textContent : "";
+        var first = firstInput ? firstInput.value.trim() : "";
+        if (!email || !first) return;
+        var originalBtn = btn ? btn.innerHTML : "";
         if (btn) { btn.disabled = true; btn.textContent = "Sending…"; }
         try {
           var res = await fetch("/api/submit", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ source: "popup", email: email }),
+            body: JSON.stringify({ source: "popup", email: email, first: first }),
           });
           var data = await res.json().catch(function () { return {}; });
           if (res.ok && data.ok) {
@@ -1304,11 +1286,11 @@ const websiteJsonLd = {
             setTimeout(close, 1400);
           } else {
             if (meta) meta.textContent = (data && data.error) || "Something went wrong. Try again.";
-            if (btn) { btn.disabled = false; btn.textContent = originalBtn; }
+            if (btn) { btn.disabled = false; btn.innerHTML = originalBtn; }
           }
         } catch (err) {
           if (meta) meta.textContent = "Network error. Try again.";
-          if (btn) { btn.disabled = false; btn.textContent = originalBtn; }
+          if (btn) { btn.disabled = false; btn.innerHTML = originalBtn; }
         }
       });
     }
