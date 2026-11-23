@@ -1,5 +1,6 @@
 ---
 import { FEATURED, altFor } from '../data/gallery';
+import Analytics from '../components/Analytics.astro';
 
 export const prerender = true;
 const SITE_URL = 'https://vasprisin.com';
@@ -83,6 +84,8 @@ const websiteJsonLd = {
 
   <script type="application/ld+json" set:html={JSON.stringify(personJsonLd)} />
   <script type="application/ld+json" set:html={JSON.stringify(websiteJsonLd)} />
+
+  <Analytics />
 </head>
 <body>
 
