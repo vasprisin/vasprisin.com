@@ -1,0 +1,104 @@
+---
+// PostHog web analytics for vasprisin.com.
+// The project token below is a public, write-only client key: it ships in the
+// page source by design. It runs on the production host only.
+---
+<script is:inline>
+!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init capture register register_once register_for_session unregister unregister_for_session getFeatureFlag getFeatureFlagPayload isFeatureEnabled reloadFeatureFlags identify setPersonProperties group resetGroups reset get_distinct_id getGroups get_session_id alias set_config startSessionRecording stopSessionRecording captureException opt_in_capturing opt_out_capturing has_opted_in_capturing has_opted_out_capturing debug".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+if (["vasprisin.com", "www.vasprisin.com"].indexOf(location.hostname) !== -1) {
+  posthog.init("phc_pX35skFjfaMF6snqFFmzSto7NzQ9M9rXWospNYHtsFfV", {
+    api_host: "https://us.i.posthog.com",
+    autocapture: true,
+    capture_pageview: true,
+    capture_pageleave: true,
+    person_profiles: "identified_only",
+    persistence: "memory"
+  });
+}
+</script>
+<script is:inline>
+/* Site events -> PostHog. Delegated listeners only; nothing here touches the forms.
+   Every event carries page_path. No email, name, phone or message text is sent.
+   Does nothing when PostHog is missing or was not started on this host. */
+(function () {
+  function track(event, props) {
+    try {
+      var ph = window.posthog;
+      if (!ph || typeof ph.capture !== "function") return;
+      if (!ph.__loaded && !(ph._i && ph._i.length)) return;
+      props = props || {};
+      props.page_path = location.pathname;
+      ph.capture(event, props);
+    } catch (e) {}
+  }
+
+  // Button label only: email addresses, long digit runs and arrows are removed.
+  function label(el) {
+    var text = (el.getAttribute("aria-label") || el.textContent || "")
+      .replace(/\S+@\S+/g, "").replace(/\+?\d[\d\s().-]{6,}/g, "").replace(/[→\s]+/g, " ").trim();
+    return text.slice(0, 60);
+  }
+
+  function locationOf(el) {
+    if (el.closest(".vp-drawer")) return "mobile_nav";
+    if (el.closest(".vp-popup")) return "popup";
+    if (el.closest("header")) return "nav";
+    if (el.closest("footer")) return "footer";
+    var section = el.closest("section[id]");
+    if (!section) return "other";
+    return section.id === "top" ? "hero" : section.id.toLowerCase().replace(/[^a-z0-9]+/g, "_");
+  }
+
+  var BOOKING_HREF = /calendly\.com|cal\.com\/|savvycal\.com|tidycal\.com|meetings\.hubspot\.com/i;
+  var BOOKING_TEXT = /\bbook\b.*\b(call|meeting|demo|time|slot)\b/i;
+
+  // booking_clicked + cta_clicked
+  document.addEventListener("click", function (e) {
+    var el = e.target && e.target.closest ? e.target.closest("a, button") : null;
+    if (!el || el.type === "submit") return;
+    var href = el.getAttribute("href") || "";
+    var text = label(el);
+    if (BOOKING_HREF.test(href) || BOOKING_TEXT.test(text)) {
+      track("booking_clicked", { cta_location: locationOf(el) });
+    } else if (/#contact$/.test(href) || el.classList.contains("vp-hero-pill") || el.hasAttribute("data-cta")) {
+      track("cta_clicked", { cta_text: text, cta_name: text, cta_location: locationOf(el) });
+    }
+  }, true);
+
+  // form_started: first real keystroke in the contact form, once per page view
+  var started = false;
+  document.addEventListener("input", function (e) {
+    if (started || !e.isTrusted || !e.target || !e.target.closest) return;
+    if (!e.target.closest('form[data-vp-form="contact"]')) return;
+    started = true;
+    track("form_started", { form_name: "contact" });
+  }, true);
+
+  // lead_submitted / newsletter_subscribed: the forms post JSON to /api/submit and the
+  // server answers { ok: true } on success. Only the form's own "source" label is read.
+  var EVENT_BY_SOURCE = { contact: "lead_submitted", newsletter: "newsletter_subscribed", popup: "newsletter_subscribed" };
+  if (typeof window.fetch === "function") {
+    var nativeFetch = window.fetch;
+    window.fetch = function (input, init) {
+      var pending = nativeFetch.apply(this, arguments);
+      try {
+        var url = new URL(typeof input === "string" ? input : (input && input.url) || "", location.href);
+        var isPost = String((init && init.method) || "").toUpperCase() === "POST";
+        if (isPost && url.origin === location.origin && url.pathname === "/api/submit" && typeof init.body === "string") {
+          var source = String(JSON.parse(init.body).source || "");
+          var event = EVENT_BY_SOURCE[source];
+          if (event) {
+            pending.then(function (res) {
+              if (!res.ok) return;
+              return res.clone().json().then(function (data) {
+                if (data && data.ok) track(event, { form_name: source });
+              });
+            }).catch(function () {});
+          }
+        }
+      } catch (e) {}
+      return pending;
+    };
+  }
+})();
+</script>

@@ -1,4 +1,5 @@
 ---
+import Analytics from '../components/Analytics.astro';
 interface Props {
   title: string;
   description: string;
@@ -74,6 +75,8 @@ const absoluteOgImage = ogImage.startsWith('http') ? ogImage : new URL(ogImage, 
   <link rel="stylesheet" href="/site.css" />
 
   {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
+
+  <Analytics />
 </head>
 <body>
 
